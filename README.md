@@ -1,24 +1,14 @@
-# botoes-memes
+# Instant-Buttons-Memes
+This project aims to aggregate all meme sounds into one single app.
 
-## Project setup
+## How to run
+The application uses Vue.js as a desktop application with @Capacitor framework, which wrapps the app and compiles it to mobile devices.
+
+## How to run
 ```
 npm install
-```
 
-### Compiles and hot-reloads for development
-```
 npm run serve
-```
 
-### Compiles and minifies for production
+npx run android
 ```
-npm run build
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
