@@ -3,6 +3,7 @@
         <div class="small-button-background" :style="getRandomColor()"></div>
         <button class="small-button"></button>
         <div class="small-button-shadow"></div>
+        <div class="instant-button-name">Very Long Name Mucho longo</div>
     </div>
 </template>
 
@@ -32,9 +33,11 @@ export default {
     text-align: center;
     word-wrap: break-word;
 
-    margin-right: 18px;
+    display: flex;
+    justify-content: center;
+
     flex-basis: calc((100% - 60px) / 3);
-    margin-bottom: 100px;
+    margin-bottom: 135px;
 }
 
 .small-button-background {
@@ -42,7 +45,6 @@ export default {
     width: 86px;
     height: 84px;
     margin-top: 3px;
-    margin-left: 3px;
     position: absolute;
 }
 
@@ -68,5 +70,19 @@ export default {
     background: url('/public/shadow.png') no-repeat;
     position: absolute;
     z-index: -1;
+}
+
+.instant-button-name {
+    color: white;
+    position: absolute;
+    /* height: 108px; */
+    /* width: 115%; */
+    display: flex;
+    justify-content: center;
+    /* align-items: flex-end; */
+    overflow: hidden;
+    margin-top: 90px;
+    line-height: 15px;
+    width: 110px;
 }
 </style>

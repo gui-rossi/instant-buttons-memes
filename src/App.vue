@@ -2,7 +2,6 @@
   <div class="app">
     <div class="background-buttons">
 
-      <!-- <button @click="this.takePicture">TIRE FOTO</button> -->
       <InstantButton v-for="instant in listOfInstants" :key="instant" />
 
     </div>
@@ -11,9 +10,7 @@
 
 <script>
 /* eslint-disable */
-import { Camera, CameraResultType } from '@capacitor/camera'
 import InstantButton from '../src/components/instant-button/instant-button.vue'
-import { App } from '@capacitor/app'
 
 export default {
   name: 'App',
@@ -34,23 +31,6 @@ export default {
 
   },
   methods: {
-    getRandomColor: function () {
-      const randomIndex = Math.floor(Math.random() * this.colors.length);
-      return 'background-color: ' + this.colors[randomIndex];
-    },
-    takePicture: async function () {
-      const image = await Camera.getPhoto({
-        quality: 90,
-        allowEditing: false,
-        resultType: CameraResultType.Uri
-      }).catch(err => console.log("ERROR"));
-
-      if (image) {
-        var imageUrl = image.webPath;
-
-        this.myImage = imageUrl;
-      }
-    },
   },
 }
 </script>
@@ -67,11 +47,11 @@ body {
 }
 
 .background-buttons {
-  width: 300px;
+  width: 400px;
   text-align: center;
 
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   text-align: center;
   flex-wrap: wrap;
 }
