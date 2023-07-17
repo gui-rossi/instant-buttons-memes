@@ -1,16 +1,19 @@
 <template>
+  <Navbar />
   <div class="app">
     <div class="background-buttons">
-
       <InstantButton v-for="instant in listOfInstants" :key="instant" />
-
     </div>
   </div>
+  <!-- <AdSense /> -->
 </template>
 
 <script>
 /* eslint-disable */
 import InstantButton from '../src/components/instant-button/instant-button.vue'
+import Navbar from '../src/components/navbar/navbar.vue'
+import AdSense from '../src/components/footer/adsense.vue'
+
 
 export default {
   name: 'App',
@@ -20,12 +23,14 @@ export default {
   data: function () {
     return {
       myImage: null,
-      listOfInstants: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+      listOfInstants: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
 
     }
   },
   components: {
-    InstantButton
+    InstantButton,
+    Navbar,
+    AdSense
   },
   mounted: function () {
 
@@ -43,7 +48,9 @@ body {
 .app {
   display: flex;
   justify-content: center;
-  background-color: #18191A;
+  background-color: #3F3F3F;
+  
+  padding-top: 85px;
 }
 
 .background-buttons {

@@ -3,7 +3,7 @@
         <div class="small-button-background" :style="getRandomColor()"></div>
         <button class="small-button"></button>
         <div class="small-button-shadow"></div>
-        <div class="instant-button-name">Very Long Name Mucho longo</div>
+        <div class="instant-button-name">Very Long Name Mucho longo THIS IS VERY LONGGGGGG</div>
     </div>
 </template>
 
@@ -18,8 +18,24 @@ export default {
     },
     methods: {
         getRandomColor: function () {
-            const randomIndex = Math.floor(Math.random() * this.colors.length);
-            return 'background-color: ' + this.colors[randomIndex];
+            var val1 = Math.floor(Math.random() * 6);
+            var val2;
+
+            var hex = "#";
+
+            do {
+                val2 = Math.floor(Math.random() * 6);
+            } while (val1 === val2);
+
+            for(var i = 0; i < 6; i++){
+                if (val1 == i || val2 == i){
+                    hex = hex + "F"; 
+                } else {
+                    hex = hex + "0"; 
+                }
+            }
+            
+            return 'background-color: ' + hex;
         }
     }
 }
@@ -75,14 +91,8 @@ export default {
 .instant-button-name {
     color: white;
     position: absolute;
-    /* height: 108px; */
-    /* width: 115%; */
-    display: flex;
-    justify-content: center;
-    /* align-items: flex-end; */
-    overflow: hidden;
     margin-top: 90px;
-    line-height: 15px;
-    width: 110px;
+    height: 37px;
+    overflow: hidden;
 }
 </style>
