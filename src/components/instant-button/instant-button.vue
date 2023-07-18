@@ -3,11 +3,13 @@
         <div class="small-button-background" :style="getRandomColor()"></div>
         <button class="small-button"></button>
         <div class="small-button-shadow"></div>
+        <Loader style="margin-top: 10px;" />
         <div class="instant-button-name">Very Long Name Mucho longo THIS IS VERY LONGGGGGG</div>
     </div>
 </template>
 
 <script>
+import Loader from '../loader/loader.vue'
 
 export default {
     name: "instant-button",
@@ -15,6 +17,9 @@ export default {
         return {
             colors: ['#FF0000', '#00FF00', '#0000FF']
         }
+    },
+    components: {
+        Loader
     },
     methods: {
         getRandomColor: function () {

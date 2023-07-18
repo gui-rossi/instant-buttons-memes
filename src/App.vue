@@ -13,6 +13,7 @@
 import InstantButton from '../src/components/instant-button/instant-button.vue'
 import Navbar from '../src/components/navbar/navbar.vue'
 import AdSense from '../src/components/footer/adsense.vue'
+import Loader from '../src/components/loader/loader.vue'
 
 
 export default {
@@ -30,7 +31,8 @@ export default {
   components: {
     InstantButton,
     Navbar,
-    AdSense
+    AdSense,
+    Loader
   },
   mounted: function () {
 
@@ -62,4 +64,5 @@ body {
   text-align: center;
   flex-wrap: wrap;
 }
+
 </style>
