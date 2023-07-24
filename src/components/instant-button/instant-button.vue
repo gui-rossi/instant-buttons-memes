@@ -1,15 +1,19 @@
 <template>
-    <div class="instant">
+    <div class="instant" @click="playSound">
         <div class="small-button-background" :style="getRandomColor()"></div>
         <button class="small-button"></button>
         <div class="small-button-shadow"></div>
-        <Loader style="margin-top: 10px;" />
-        <div class="instant-button-name">Very Long Name Mucho longo THIS IS VERY LONGGGGGG</div>
+        <!-- <Loader style="margin-top: 10px;" /> -->
+        <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
+        <div class="instant-button-name">{{ button.name }}</div>
     </div>
 </template>
 
 <script>
 import Loader from '../loader/loader.vue'
+import Playing from '../play-animation/playing.vue'
+
+/* eslint-disable */
 
 export default {
     name: "instant-button",
@@ -18,10 +22,18 @@ export default {
             colors: ['#FF0000', '#00FF00', '#0000FF']
         }
     },
+    props: {
+        button: Object
+    },
     components: {
-        Loader
+        Loader,
+        Playing
     },
     methods: {
+        playSound: function () {
+            const sound = new Audio(`data:audio/x-wav;base64, ${this.button.file}`);
+            sound.play();
+        },
         getRandomColor: function () {
             var val1 = Math.floor(Math.random() * 6);
             var val2;
@@ -58,7 +70,7 @@ export default {
     justify-content: center;
 
     flex-basis: calc((100% - 60px) / 3);
-    margin-bottom: 135px;
+    margin-bottom: 150px;
 }
 
 .small-button-background {

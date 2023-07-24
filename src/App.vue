@@ -2,7 +2,7 @@
   <Navbar />
   <div class="app">
     <div class="background-buttons">
-      <InstantButton v-for="instant in listOfInstants" :key="instant" />
+      <InstantButton v-for="instant in listOfButtons" :key="instant" :button="instant"/>
     </div>
   </div>
   <!-- <AdSense /> -->
@@ -14,7 +14,7 @@ import InstantButton from '../src/components/instant-button/instant-button.vue'
 import Navbar from '../src/components/navbar/navbar.vue'
 import AdSense from '../src/components/footer/adsense.vue'
 import Loader from '../src/components/loader/loader.vue'
-
+import axios from './components/axios';
 
 export default {
   name: 'App',
@@ -25,19 +25,28 @@ export default {
     return {
       myImage: null,
       listOfInstants: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-
+      listOfButtons: []
     }
   },
   components: {
     InstantButton,
     Navbar,
     AdSense,
-    Loader
+    Loader,
   },
   mounted: function () {
-
+    this.fetchData();
   },
   methods: {
+    fetchData() {
+      axios.get('FetchButtons')
+        .then((response) => {
+          this.listOfButtons.push(response.data);
+        })
+        .catch((error) => {
+          console.error("Error fetching data: ", error);
+        });
+    },
   },
 }
 </script>
