@@ -14,7 +14,7 @@ import InstantButton from '../src/components/instant-button/instant-button.vue'
 import Navbar from '../src/components/navbar/navbar.vue'
 import AdSense from '../src/components/footer/adsense.vue'
 import Loader from '../src/components/loader/loader.vue'
-import axios from './components/axios';
+import { GetButton } from './services/button_services';
 
 export default {
   name: 'App',
@@ -39,9 +39,9 @@ export default {
   },
   methods: {
     fetchData() {
-      axios.get('FetchButtons')
+      GetButton.fetchButtons()
         .then((response) => {
-          this.listOfButtons.push(response.data);
+          this.listOfButtons = response.data;
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
@@ -52,7 +52,7 @@ export default {
 </script>
 
 <style>
-body {
+body, html {
   margin: 0;
 }
 
@@ -62,6 +62,7 @@ body {
   background-color: #3F3F3F;
   
   padding-top: 85px;
+  min-height: calc(100vh - 85px);
 }
 
 .background-buttons {

@@ -10,8 +10,9 @@
 </template>
 
 <script>
-import Loader from '../loader/loader.vue'
-import Playing from '../play-animation/playing.vue'
+import Loader from '../loader/loader.vue';
+import Playing from '../play-animation/playing.vue';
+import { GetButton } from '../../services/button_services';
 
 /* eslint-disable */
 
@@ -31,6 +32,14 @@ export default {
     },
     methods: {
         playSound: function () {
+            GetButton.fetchButtonFile()
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(err => {
+                    console.error("Error while loading file!", err);
+                })
+
             const sound = new Audio(`data:audio/x-wav;base64, ${this.button.file}`);
             sound.play();
         },
