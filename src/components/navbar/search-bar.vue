@@ -19,7 +19,12 @@ export default {
     },
     watch: {
         inputText: function (value) {
-            console.log(value)
+            if (value == ""){
+                this.$store.commit('resetFilteredButtonList');
+            }
+            else {
+                this.$store.commit('setFilteredButtonList', value);
+            }
         }
     }
 }

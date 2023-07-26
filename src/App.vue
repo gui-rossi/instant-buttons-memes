@@ -2,8 +2,8 @@
   <Navbar />
   <div class="app">
     <div class="background-buttons">
-      <Loader v-if="listOfButtons.length == 0" class="loader-app" />
-      <InstantButton v-else v-for="instant in listOfButtons" :key="instant" :button="instant"/>
+      <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
+      <InstantButton v-else v-for="instant in this.$store.state.filteredButtonList" :key="instant" :button="instant"/>
     </div>
   </div>
   <!-- <AdSense /> -->
@@ -42,7 +42,7 @@ export default {
     fetchData() {
       GetButton.fetchButtons()
         .then((response) => {
-          this.listOfButtons = response.data;
+          this.$store.commit('setButtonListVars', response.data)
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
