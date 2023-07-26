@@ -1,9 +1,9 @@
 <template>
-    <div class="instant" @click="playSound">
-        <div class="small-button-background" :style="getRandomColor()"></div>
-        <button class="small-button"></button>
+    <div class="instant">
+        <div class="small-button-background" style="getRandomColor()"></div>
+        <button class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
-        <!-- <Loader style="margin-top: 10px;" /> -->
+        <Loader v-if="loadingAudio" style="margin-top: 10px;" />
         <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
         <div class="instant-button-name">{{ button.name }}</div>
     </div>
@@ -20,7 +20,7 @@ export default {
     name: "instant-button",
     data: function () {
         return {
-            colors: ['#FF0000', '#00FF00', '#0000FF']
+            loadingAudio: false,
         }
     },
     props: {
@@ -32,16 +32,20 @@ export default {
     },
     methods: {
         playSound: function () {
-            GetButton.fetchButtonFile()
+            this.loadingAudio = true;
+            GetButton.fetchButtonFile(this.button.id)
                 .then(response => {
-                    console.log(response.data);
+                    const sound = new Audio(`data:audio/x-wav;base64, ${response.data.file}`);
+                    
+                    sound.play();
                 })
                 .catch(err => {
                     console.error("Error while loading file!", err);
                 })
+                .finally(_ => {
+                    this.loadingAudio = false;
+                })
 
-            const sound = new Audio(`data:audio/x-wav;base64, ${this.button.file}`);
-            sound.play();
         },
         getRandomColor: function () {
             var val1 = Math.floor(Math.random() * 6);

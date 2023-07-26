@@ -18,7 +18,7 @@ export default {
 
 <style>
 .header {
-    background-color: #3F3F3F;
+    background-color: #222222;
     height: 85px;
     display: flex;
     justify-content: center;

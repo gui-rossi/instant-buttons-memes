@@ -2,7 +2,8 @@
   <Navbar />
   <div class="app">
     <div class="background-buttons">
-      <InstantButton v-for="instant in listOfButtons" :key="instant" :button="instant"/>
+      <Loader v-if="listOfButtons.length == 0" class="loader-app" />
+      <InstantButton v-else v-for="instant in listOfButtons" :key="instant" :button="instant"/>
     </div>
   </div>
   <!-- <AdSense /> -->
@@ -56,10 +57,16 @@ body, html {
   margin: 0;
 }
 
+.loader-app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .app {
   display: flex;
   justify-content: center;
-  background-color: #3F3F3F;
+  background-color: #222222;
   
   padding-top: 85px;
   min-height: calc(100vh - 85px);
