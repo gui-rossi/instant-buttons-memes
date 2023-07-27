@@ -4,10 +4,11 @@ import App from './App.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSearch } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimes } from '@fortawesome/free-solid-svg-icons';
 import store from './store';
 
 library.add(faSearch)
+library.add(faTimes)
 
 createApp(App)
     .use(store)

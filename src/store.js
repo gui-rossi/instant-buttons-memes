@@ -6,6 +6,7 @@ const store = createStore({
     return {
       buttonList: [],
       filteredButtonList: [],
+      audio: new Audio(),
     }
   },
   mutations: {
@@ -14,10 +15,13 @@ const store = createStore({
       state.filteredButtonList = buttons;
     },
     setFilteredButtonList (state, filteredStr) {
-      state.filteredButtonList = state.buttonList.filter(b => b.name.includes(filteredStr))
+      state.filteredButtonList = state.buttonList.filter(b => b.name.toLowerCase().includes(filteredStr.toLowerCase()))
     },
     resetFilteredButtonList (state) {
       state.filteredButtonList = state.buttonList; 
+    },
+    playAudio (state, src) {
+      state.audio.src = src; 
     }
   }
 })

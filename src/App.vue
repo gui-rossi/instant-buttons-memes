@@ -69,7 +69,8 @@ body, html {
   background-color: #222222;
   
   padding-top: 85px;
-  min-height: calc(100vh - 85px);
+  /* min-height: calc(100vh - 85px); */
+  height: 100%;
 }
 
 .background-buttons {
@@ -78,7 +79,6 @@ body, html {
 
   display: flex;
   justify-content: space-evenly;
-  text-align: center;
   flex-wrap: wrap;
 }
 

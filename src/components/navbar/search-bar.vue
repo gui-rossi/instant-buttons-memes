@@ -3,7 +3,10 @@
         <div class="search-bar-icon">
             <font-awesome-icon :icon="['fas', 'search']" />
         </div>
-        <input class="search-bar-input" v-model="inputText" type="text" placeholder="O james eu quero uma..." name="search">
+        <input class="search-bar-input" :class="[this.enableClearX]" v-model="inputText" type="text" placeholder="O james eu quero uma..." name="search">
+        <div v-if="inputText.length" class="cancel-search-icon" @click="clearSearchBar">
+            <font-awesome-icon :icon="['fas', 'times']" />
+        </div>
     </div>
 </template>
 
@@ -17,6 +20,13 @@ export default {
             inputText: "",
         }
     },
+    computed: {
+        enableClearX: function () {
+            if (this.inputText.length){
+                return "sharpen-container-border";
+            }
+        }
+    },
     watch: {
         inputText: function (value) {
             if (value == ""){
@@ -26,16 +36,55 @@ export default {
                 this.$store.commit('setFilteredButtonList', value);
             }
         }
+    },
+    methods: {
+        clearSearchBar: function() {
+            this.inputText = "";
+        }
     }
 }
 </script>
 
 <style>
+.cancel-search-icon {
+    height: 100%;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: x-large;
+    color: white;
+    background-color: black;
+    border-bottom-right-radius: 100px;
+    border-top-right-radius: 100px;
+    border: 1px solid black;
+    position: relative;
+    cursor: pointer;
+    padding-left: 7px;
+    padding-right: 10px;
+}
+
+.cancel-search-icon::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%; /* Adjust the positioning to place the left border halfway vertically */
+  transform: translateY(-50%);
+  height: 30px; /* Half of the square's height, adjust as needed */
+  width: 1px; /* Adjust the width of the border as desired */
+  background-color: white; /* Set the color of the border */
+}
+
 .search-bar {
     width: 70%;
     height: 55%;
     display: flex;
     align-items: center;
+}
+
+.sharpen-container-border {
+    border-bottom-right-radius: 0px !important;
+    border-top-right-radius: 0px !important;
 }
 
 .search-bar-input {
@@ -49,6 +98,7 @@ export default {
 
     background-color: black;
     padding-left: 10px;
+    padding-right: 10px;
     color: white;
 }
 

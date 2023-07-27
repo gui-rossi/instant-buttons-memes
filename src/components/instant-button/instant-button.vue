@@ -1,9 +1,9 @@
 <template>
     <div class="instant">
-        <div class="small-button-background" style="getRandomColor()"></div>
+        <div class="small-button-background" :style="this.getRandomColor"></div>
         <button class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
-        <Loader v-if="loadingAudio" style="margin-top: 10px;" />
+        <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
         <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
         <div class="instant-button-name">{{ button.name }}</div>
     </div>
@@ -30,23 +30,7 @@ export default {
         Loader,
         Playing
     },
-    methods: {
-        playSound: function () {
-            this.loadingAudio = true;
-            GetButton.fetchButtonFile(this.button.id)
-                .then(response => {
-                    const sound = new Audio(`data:audio/x-wav;base64, ${response.data.file}`);
-                    
-                    sound.play();
-                })
-                .catch(err => {
-                    console.error("Error while loading file!", err);
-                })
-                .finally(_ => {
-                    this.loadingAudio = false;
-                })
-
-        },
+    computed: {
         getRandomColor: function () {
             var val1 = Math.floor(Math.random() * 6);
             var val2;
@@ -67,6 +51,25 @@ export default {
             
             return 'background-color: ' + hex;
         }
+    },
+    methods: {
+        playSound: function () {
+            this.loadingAudio = true;
+            
+            GetButton.fetchButtonFile(this.button.id)
+                .then(response => {
+                    this.$store.commit('playAudio', `data:audio/x-wav;base64, ${response.data.file}`);
+
+                    this.$store.state.audio.play();
+                })
+                .catch(err => {
+                    console.error("Error while loading file!", err);
+                })
+                .finally(_ => {
+                    this.loadingAudio = false;
+                })
+
+        },
     }
 }
 
