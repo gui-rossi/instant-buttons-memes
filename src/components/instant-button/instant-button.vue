@@ -1,5 +1,5 @@
 <template>
-    <div class="instant">
+    <div class="instant" :class="{ 'added-opacity': !button.matched }">
         <div class="small-button-background" :style="this.getRandomColor"></div>
         <button class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
@@ -76,6 +76,10 @@ export default {
 </script>
 
 <style>
+.added-opacity {
+    opacity: 0.15;
+}
+
 .instant {
     position: relative;
     vertical-align: top;

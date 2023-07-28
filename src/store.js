@@ -1,5 +1,7 @@
 import { createStore } from 'vuex'
 
+/* eslint-disable */
+
 // Create a new store instance.
 const store = createStore({
   state () {
@@ -15,15 +17,38 @@ const store = createStore({
       state.filteredButtonList = buttons;
     },
     setFilteredButtonList (state, filteredStr) {
-      state.filteredButtonList = state.buttonList.filter(b => b.name.toLowerCase().includes(filteredStr.toLowerCase()))
+      state.filteredButtonList = customSort(filteredStr, state.filteredButtonList);
     },
     resetFilteredButtonList (state) {
-      state.filteredButtonList = state.buttonList; 
+      state.filteredButtonList = state.buttonList;
+      for(var i = 0; i < state.filteredButtonList.length; i++){
+        state.filteredButtonList[i].matched = true;
+      }
     },
     playAudio (state, src) {
       state.audio.src = src; 
     }
   }
 })
+
+function customSort(substring, arr) {
+  return arr.slice().sort((s1, s2) => comparator(substring, s1, s2));
+}
+
+function comparator(substring, s1, s2) {
+  const containsS1 = s1.name.toLowerCase().includes(substring.toLowerCase());
+  const containsS2 = s2.name.toLowerCase().includes(substring.toLowerCase());
+
+  s1.matched = containsS1;
+  s2.matched = containsS2;
+
+  if (containsS1 && !containsS2) {
+    return -1; // s1 comes first
+  } else if (!containsS1 && containsS2) {
+    return 1; // s2 comes first
+  } else {
+    return 0;
+  }
+}
 
 export default store;

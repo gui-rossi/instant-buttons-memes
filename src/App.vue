@@ -24,9 +24,7 @@ export default {
   },
   data: function () {
     return {
-      myImage: null,
-      listOfInstants: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20],
-      listOfButtons: []
+
     }
   },
   components: {
@@ -35,6 +33,9 @@ export default {
     AdSense,
     Loader,
   },
+  computed: {
+
+  },
   mounted: function () {
     this.fetchData();
   },
@@ -42,7 +43,11 @@ export default {
     fetchData() {
       GetButton.fetchButtons()
         .then((response) => {
-          this.$store.commit('setButtonListVars', response.data)
+          const updatedList = response.data.map((obj) => {
+                                return { ...obj, matched: true };
+                              });
+
+          this.$store.commit('setButtonListVars', updatedList)
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
@@ -55,6 +60,7 @@ export default {
 <style>
 body, html {
   margin: 0;
+  height: 100%;
 }
 
 .loader-app {
@@ -63,20 +69,21 @@ body, html {
   align-items: center;
 }
 
-.app {
+#app {
   display: flex;
-  justify-content: center;
   background-color: #222222;
-  
+  justify-content: center;
+}
+
+.app {
+  background-color: #222222;
   padding-top: 85px;
-  /* min-height: calc(100vh - 85px); */
-  height: 100%;
+  min-height: calc(100vh - 85px);
 }
 
 .background-buttons {
   width: 400px;
   text-align: center;
-
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
