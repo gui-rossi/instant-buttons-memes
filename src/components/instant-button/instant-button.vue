@@ -1,7 +1,9 @@
 <template>
     <div class="instant" :class="{ 'added-opacity': !button.matched }">
         <div class="small-button-background" :style="this.getRandomColor"></div>
-        <button class="small-button" @click="playSound"></button>
+        <button class="small-button" @click="playSound" @touchstart="onTouchStart" @touchend="onTouchEnd"
+            @touchcancel="onTouchCancel">
+        </button>
         <div class="small-button-shadow"></div>
         <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
         <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
@@ -21,6 +23,9 @@ export default {
     data: function () {
         return {
             loadingAudio: false,
+
+            held: false,
+            holdTimer: null,
         }
     },
     props: {
@@ -41,21 +46,21 @@ export default {
                 val2 = Math.floor(Math.random() * 6);
             } while (val1 === val2);
 
-            for(var i = 0; i < 6; i++){
-                if (val1 == i || val2 == i){
-                    hex = hex + "F"; 
+            for (var i = 0; i < 6; i++) {
+                if (val1 == i || val2 == i) {
+                    hex = hex + "F";
                 } else {
-                    hex = hex + "0"; 
+                    hex = hex + "0";
                 }
             }
-            
+
             return 'background-color: ' + hex;
         }
     },
     methods: {
         playSound: function () {
             this.loadingAudio = true;
-            
+
             GetButton.fetchButtonFile(this.button.id)
                 .then(response => {
                     this.$store.commit('playAudio', `data:audio/x-wav;base64, ${response.data.file}`);
@@ -69,6 +74,39 @@ export default {
                     this.loadingAudio = false;
                 })
 
+        },
+        onTouchStart() {
+            this.held = false;
+            this.holdTimer = setTimeout(async () => {
+                this.held = true;
+
+                this.addOrRemoveFavorite();
+            }, 1200);
+        },
+        async onTouchEnd() {
+            clearTimeout(this.holdTimer);
+
+            if (!this.held) {
+                this.playSound();
+            }
+        },
+        onTouchCancel() {
+            clearTimeout(this.holdTimer);
+        },
+        addOrRemoveFavorite: function () {
+            var favorites = this.$store.state.favoritedButtonsList;
+
+            const buttonIsAlreadyFavorited = favorites.some(but => but.id == this.button.id);
+
+            if (buttonIsAlreadyFavorited) {
+                const filteredOutFavorites = favorites.filter(but => but.id != this.button.id);
+
+                this.$store.commit('setFavoritedList', filteredOutFavorites)
+            } else {
+                favorites.push(this.button);
+                
+                this.$store.commit('setFavoritedList', favorites);
+            }
         },
     }
 }

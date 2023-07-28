@@ -1,4 +1,5 @@
 import { createStore } from 'vuex'
+import { Favorites } from './PreferencesObject';
 
 /* eslint-disable */
 
@@ -9,6 +10,8 @@ const store = createStore({
       buttonList: [],
       filteredButtonList: [],
       audio: new Audio(),
+
+      favoritedButtonsList: null
     }
   },
   mutations: {
@@ -27,8 +30,13 @@ const store = createStore({
     },
     playAudio (state, src) {
       state.audio.src = src; 
+    },
+    setFavoritedList (state, favorites) {
+      state.favoritedButtonsList = favorites;
+
+      Favorites.setObject(favorites);
     }
-  }
+  },
 })
 
 function customSort(substring, arr) {
