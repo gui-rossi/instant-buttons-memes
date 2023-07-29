@@ -1,11 +1,8 @@
 <template>
     <div class="instant" :class="{ 'added-opacity': !button.matched }">
         <div class="small-button-background" :style="this.getRandomColor"></div>
-        <button class="small-button" 
-            @touchstart="onTouchStart" 
-            @touchend="onTouchEnd"
-            @touchcancel="onTouchCancel">
-        </button>
+        <button v-if="this.$store.state.isMobile" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
+        <button v-else class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
         <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
         <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->

@@ -3,9 +3,9 @@
         <div class="search-bar-icon">
             <font-awesome-icon :icon="['fas', 'search']" />
         </div>
-        <input v-if="this.$store.state.isMobile" class="search-bar-input" v-model="this.auxText" :class="[this.enableClearX]" type="text" placeholder="O james eu quero uma..." name="search" @input="onInput">
+        <input v-if="this.$store.state.isMobile" class="search-bar-input" v-model="this.auxText" :class="[this.enableClearX]" type="text" placeholder="O james eu quero uma..." name="search" @change="onChange" @input="onInput">
         <input v-else class="search-bar-input" :class="[this.enableClearX]" v-model="this.inputText" type="text" placeholder="O james eu quero uma..." name="search">
-        <div v-if="inputText.length || auxText.length" class="cancel-search-icon" @click="clearSearchBar">
+        <div v-if="this.inputText.length || this.auxText.length" class="cancel-search-icon" @click="clearSearchBar">
             <font-awesome-icon :icon="['fas', 'times']" />
         </div>
     </div>
@@ -19,7 +19,7 @@ export default {
     data: function () {
         return {
             inputText: "",
-            auxText: ""
+            auxText: "",
         }
     },
     computed: {
@@ -38,25 +38,42 @@ export default {
                 this.$store.commit('setFilteredButtonList', value);
             }
         },
+        auxText: function () {
+            console.log(this.auxText);
+        }
     },
     methods: {
         onInput(value) {
             if (value.inputType == 'insertCompositionText') {
                 this.auxText = value.data ? value.data : "";
 
-                if (value == "") {
-                    this.$store.commit('resetFilteredButtonList');
-                }
-                else {
-                    this.$store.commit('setFilteredButtonList', this.auxText);
-                }
+                this.updateStore(this.auxText);
             }
         },
-        clearSearchBar: function () {
+        onChange(event) {
+            /* 
+                2 flows estão passando aqui: 
+                se limpar pelo clear search bar -> limpo a variavel e re-ordeno os botoes
+                se limpar pelo "ok" do teclado  -> limpo a variavel, o que significa que o componente com a funcao clearSearchBar 
+                                                    vai desrenderizar cancelando a chamada da funcao
+
+                comentar essa linha faz funcionar o primeiro flow, manter ela faz funcionar o segundo flow
+            */
+            this.auxText = "";
+        },
+        clearSearchBar() {
             this.inputText = "";
             this.auxText = "";
             this.$store.commit('resetFilteredButtonList');
-        }
+        },
+        updateStore: function (value) {
+            if (value == "") {
+                this.$store.commit('resetFilteredButtonList');
+            }
+            else {
+                this.$store.commit('setFilteredButtonList', value);
+            }
+        },
     }
 }
 </script>
