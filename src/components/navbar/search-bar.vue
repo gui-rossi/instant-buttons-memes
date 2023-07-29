@@ -3,8 +3,9 @@
         <div class="search-bar-icon">
             <font-awesome-icon :icon="['fas', 'search']" />
         </div>
-        <input class="search-bar-input" :class="[this.enableClearX]" v-model="inputText" type="text" placeholder="O james eu quero uma..." name="search">
-        <div v-if="inputText.length" class="cancel-search-icon" @click="clearSearchBar">
+        <input v-if="this.$store.state.isMobile" class="search-bar-input" v-model="this.auxText" :class="[this.enableClearX]" type="text" placeholder="O james eu quero uma..." name="search" @input="onInput">
+        <input v-else class="search-bar-input" :class="[this.enableClearX]" v-model="this.inputText" type="text" placeholder="O james eu quero uma..." name="search">
+        <div v-if="inputText.length || auxText.length" class="cancel-search-icon" @click="clearSearchBar">
             <font-awesome-icon :icon="['fas', 'times']" />
         </div>
     </div>
@@ -18,28 +19,43 @@ export default {
     data: function () {
         return {
             inputText: "",
+            auxText: ""
         }
     },
     computed: {
         enableClearX: function () {
-            if (this.inputText.length){
+            if (this.inputText.length || this.auxText.length) {
                 return "sharpen-container-border";
             }
         }
     },
     watch: {
         inputText: function (value) {
-            if (value == ""){
+            if (value == "") {
                 this.$store.commit('resetFilteredButtonList');
             }
             else {
                 this.$store.commit('setFilteredButtonList', value);
             }
-        }
+        },
     },
     methods: {
-        clearSearchBar: function() {
+        onInput(value) {
+            if (value.inputType == 'insertCompositionText') {
+                this.auxText = value.data ? value.data : "";
+
+                if (value == "") {
+                    this.$store.commit('resetFilteredButtonList');
+                }
+                else {
+                    this.$store.commit('setFilteredButtonList', this.auxText);
+                }
+            }
+        },
+        clearSearchBar: function () {
             this.inputText = "";
+            this.auxText = "";
+            this.$store.commit('resetFilteredButtonList');
         }
     }
 }
@@ -65,14 +81,18 @@ export default {
 }
 
 .cancel-search-icon::before {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 50%; /* Adjust the positioning to place the left border halfway vertically */
-  transform: translateY(-50%);
-  height: 30px; /* Half of the square's height, adjust as needed */
-  width: 1px; /* Adjust the width of the border as desired */
-  background-color: white; /* Set the color of the border */
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    /* Adjust the positioning to place the left border halfway vertically */
+    transform: translateY(-50%);
+    height: 30px;
+    /* Half of the square's height, adjust as needed */
+    width: 1px;
+    /* Adjust the width of the border as desired */
+    background-color: white;
+    /* Set the color of the border */
 }
 
 .search-bar {

@@ -3,7 +3,7 @@
   <div class="app">
     <div class="background-buttons">
       <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
-      <InstantButton v-else v-for="instant in this.$store.state.filteredButtonList" :key="instant" :button="instant" />
+      <InstantButton v-else v-for="instant in this.$store.state.filteredButtonList" :key="instant.id" :button="instant" />
     </div>
   </div>
   <!-- <AdSense /> -->
@@ -38,20 +38,21 @@ export default {
 
   },
   mounted: async function () {
+    this.$store.commit("setIsMobile");
+
     this.fetchData();
 
-    if (!this.isMobile())
+    if (!this.$store.state.isMobile)
       return;
-      
-    await this.loadFavorited();
 
+    await this.loadFavorited();
   },
   methods: {
     fetchData() {
       GetButton.fetchButtons()
         .then((response) => {
           const updatedList = response.data.map((obj) => {
-            return { ...obj, matched: true };
+            return { ...obj, matched: true, favorited: false };
           });
 
           this.$store.commit('setButtonListVars', updatedList)
@@ -62,15 +63,8 @@ export default {
     },
     loadFavorited: async function () {
       const favoritedObj = await Favorites.getObject();
-      this.$store.commit('setFavoritedList', favoritedObj ? favoritedObj.value: [])
+      this.$store.commit('setFavoritedList', favoritedObj ? favoritedObj.value : [])
     },
-    isMobile() {
-      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
-        return true
-      } else {
-        return false
-      }
-    }
   },
 }
 </script>

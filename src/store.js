@@ -5,37 +5,45 @@ import { Favorites } from './PreferencesObject';
 
 // Create a new store instance.
 const store = createStore({
-  state () {
+  state() {
     return {
       buttonList: [],
       filteredButtonList: [],
       audio: new Audio(),
 
-      favoritedButtonsList: null
+      favoritedButtonsList: [],
+      isMobile: false,
     }
   },
   mutations: {
-    setButtonListVars (state, buttons) {
+    setButtonListVars(state, buttons) {
       state.buttonList = buttons;
       state.filteredButtonList = buttons;
     },
-    setFilteredButtonList (state, filteredStr) {
+    setFilteredButtonList(state, filteredStr) {
       state.filteredButtonList = customSort(filteredStr, state.filteredButtonList);
     },
-    resetFilteredButtonList (state) {
+    resetFilteredButtonList(state) {
       state.filteredButtonList = state.buttonList;
-      for(var i = 0; i < state.filteredButtonList.length; i++){
+      for (var i = 0; i < state.filteredButtonList.length; i++) {
         state.filteredButtonList[i].matched = true;
       }
     },
-    playAudio (state, src) {
-      state.audio.src = src; 
+    playAudio(state, src) {
+      state.audio.src = src;
     },
-    setFavoritedList (state, favorites) {
+    setFavoritedList(state, favorites) {
       state.favoritedButtonsList = favorites;
 
       Favorites.setObject(favorites);
-    }
+    },
+    setIsMobile(state) {
+      if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+        state.isMobile = true;
+      } else {
+        state.isMobile = false;
+      }
+    },
   },
 })
 

@@ -1,13 +1,18 @@
 <template>
     <div class="instant" :class="{ 'added-opacity': !button.matched }">
         <div class="small-button-background" :style="this.getRandomColor"></div>
-        <button class="small-button" @click="playSound" @touchstart="onTouchStart" @touchend="onTouchEnd"
+        <button class="small-button" 
+            @touchstart="onTouchStart" 
+            @touchend="onTouchEnd"
             @touchcancel="onTouchCancel">
         </button>
         <div class="small-button-shadow"></div>
         <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
         <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
         <div class="instant-button-name">{{ button.name }}</div>
+        <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']"
+            class="favorite-icon-regular" />
+        <font-awesome-icon v-else @click="addOrRemoveFavorite" :icon="['fas', 'heart']" class="favorite-icon-solid" />
     </div>
 </template>
 
@@ -36,6 +41,14 @@ export default {
         Playing
     },
     computed: {
+        verifyIfFavorite: function () {
+            const isFavorite = this.$store.state.favoritedButtonsList?.some(but => but.id == this.button.id);
+
+            if (isFavorite)
+                return true;
+            else
+                return false;
+        },
         getRandomColor: function () {
             var val1 = Math.floor(Math.random() * 6);
             var val2;
@@ -64,8 +77,8 @@ export default {
             GetButton.fetchButtonFile(this.button.id)
                 .then(response => {
                     this.$store.commit('playAudio', `data:audio/x-wav;base64, ${response.data.file}`);
-
-                    this.$store.state.audio.play();
+                    
+                    this.$store.state.audio.play().catch(_ => _);
                 })
                 .catch(err => {
                     console.error("Error while loading file!", err);
@@ -104,7 +117,7 @@ export default {
                 this.$store.commit('setFavoritedList', filteredOutFavorites)
             } else {
                 favorites.push(this.button);
-                
+
                 this.$store.commit('setFavoritedList', favorites);
             }
         },
@@ -114,6 +127,24 @@ export default {
 </script>
 
 <style>
+.favorite-icon-regular {
+    color: #ff0000;
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    font-size: x-large;
+    opacity: 0.3;
+}
+
+
+.favorite-icon-solid {
+    color: #ff0000;
+    position: absolute;
+    z-index: 1;
+    right: 0;
+    font-size: x-large;
+}
+
 .added-opacity {
     opacity: 0.15;
 }
