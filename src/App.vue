@@ -17,6 +17,7 @@ import AdSense from '../src/components/footer/adsense.vue'
 import Loader from '../src/components/loader/loader.vue'
 import { GetButton } from './services/button_services';
 import { Favorites } from './PreferencesObject';
+import { Preferences } from '@capacitor/preferences';
 
 export default {
   name: 'App',
@@ -34,17 +35,14 @@ export default {
     AdSense,
     Loader,
   },
-  computed: {
-
-  },
   mounted: async function () {
     this.$store.commit("setIsMobile");
-
+    
     this.fetchData();
-
+    
     if (!this.$store.state.isMobile)
-      return;
-
+    return;
+    
     await this.loadFavorited();
   },
   methods: {
@@ -62,8 +60,8 @@ export default {
         });
     },
     loadFavorited: async function () {
-      const favoritedObj = await Favorites.getObject();
-      this.$store.commit('setFavoritedList', favoritedObj ? favoritedObj.value : [])
+      const favoritedArray = await Favorites.getObject();
+      this.$store.commit('setFavoritedList', favoritedArray);
     },
   },
 }

@@ -39,7 +39,7 @@ export default {
     },
     computed: {
         verifyIfFavorite: function () {
-            const isFavorite = this.$store.state.favoritedButtonsList?.some(but => but.id == this.button.id);
+            const isFavorite = this.$store.state.favoritedButtonsList.some(but => but.id == this.button.id);
 
             if (isFavorite)
                 return true;
@@ -105,7 +105,6 @@ export default {
         },
         addOrRemoveFavorite: function () {
             var favorites = this.$store.state.favoritedButtonsList;
-
             const buttonIsAlreadyFavorited = favorites.some(but => but.id == this.button.id);
 
             if (buttonIsAlreadyFavorited) {

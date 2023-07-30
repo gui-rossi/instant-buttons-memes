@@ -59,7 +59,7 @@ export default {
 
                 comentar essa linha faz funcionar o primeiro flow, manter ela faz funcionar o segundo flow
             */
-            this.auxText = "";
+            // this.auxText = "";
         },
         clearSearchBar() {
             this.inputText = "";
