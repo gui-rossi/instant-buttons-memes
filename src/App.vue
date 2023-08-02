@@ -93,7 +93,7 @@ html {
 }
 
 .background-buttons {
-  width: 400px;
+  width: 350px;
   text-align: center;
   display: flex;
   justify-content: space-evenly;

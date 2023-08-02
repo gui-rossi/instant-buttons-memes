@@ -7,8 +7,7 @@
         <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
         <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
         <div class="instant-button-name">{{ button.name }}</div>
-        <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']"
-            class="favorite-icon-regular" />
+        <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']" class="favorite-icon-regular" />
         <font-awesome-icon v-else @click="addOrRemoveFavorite" :icon="['fas', 'heart']" class="favorite-icon-solid" />
     </div>
 </template>
@@ -82,8 +81,7 @@ export default {
                 })
                 .finally(_ => {
                     this.loadingAudio = false;
-                })
-
+                })            
         },
         onTouchStart() {
             this.held = false;
@@ -93,12 +91,15 @@ export default {
                 this.addOrRemoveFavorite();
             }, 1200);
         },
-        async onTouchEnd() {
+        async onTouchEnd(event) {
+            
             clearTimeout(this.holdTimer);
-
+            
             if (!this.held) {
                 this.playSound();
             }
+            
+            event.stopPropagation();
         },
         onTouchCancel() {
             clearTimeout(this.holdTimer);
@@ -127,7 +128,7 @@ export default {
     color: #ff0000;
     position: absolute;
     z-index: 1;
-    right: 0;
+    right: -10%;
     font-size: x-large;
     opacity: 0.3;
 }
@@ -137,7 +138,7 @@ export default {
     color: #ff0000;
     position: absolute;
     z-index: 1;
-    right: 0;
+    right: -10%;
     font-size: x-large;
 }
 

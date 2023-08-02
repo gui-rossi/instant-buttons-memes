@@ -3,9 +3,12 @@
         <div class="search-bar-icon">
             <font-awesome-icon :icon="['fas', 'search']" />
         </div>
-        <input v-if="this.$store.state.isMobile" class="search-bar-input" v-model="this.auxText" :class="[this.enableClearX]" type="text" placeholder="O james eu quero uma..." name="search" @change="onChange" @input="onInput">
-        <input v-else class="search-bar-input" :class="[this.enableClearX]" v-model="this.inputText" type="text" placeholder="O james eu quero uma..." name="search">
-        <div v-if="this.inputText.length || this.auxText.length" class="cancel-search-icon" @click="clearSearchBar">
+        <input v-if="this.$store.state.isMobile" @keypress="onKeyPressSearch" class="search-bar-input"
+            v-model="this.inputTextMobile" :class="[this.enableClearX]" type="text" placeholder="O james eu quero uma..."
+            name="search" @input="onInputSearch">
+        <input v-else class="search-bar-input" :class="[this.enableClearX]" v-model="this.inputText" type="text"
+            placeholder="O james eu quero uma..." name="search">
+        <div v-if="this.inputText.length || this.inputTextMobile.length" class="cancel-search-icon" @click="clearSearchBar">
             <font-awesome-icon :icon="['fas', 'times']" />
         </div>
     </div>
@@ -19,51 +22,34 @@ export default {
     data: function () {
         return {
             inputText: "",
-            auxText: "",
+            inputTextMobile: "",
+            inputTextMobileAux: "",
+
+            pressedEnter: 0,
         }
     },
     computed: {
         enableClearX: function () {
-            if (this.inputText.length || this.auxText.length) {
+            if (this.inputText.length || this.inputTextMobile.length) {
                 return "sharpen-container-border";
             }
         }
     },
     watch: {
         inputText: function (value) {
-            if (value == "") {
-                this.$store.commit('resetFilteredButtonList');
-            }
-            else {
-                this.$store.commit('setFilteredButtonList', value);
-            }
+            this.updateStore(value);
         },
-        auxText: function () {
-            console.log(this.auxText);
+        inputTextMobile: function (value) {
+            this.updateStore(value);
         }
     },
     methods: {
-        onInput(value) {
-            if (value.inputType == 'insertCompositionText') {
-                this.auxText = value.data ? value.data : "";
-
-                this.updateStore(this.auxText);
-            }
-        },
-        onChange(event) {
-            /* 
-                2 flows estão passando aqui: 
-                se limpar pelo clear search bar -> limpo a variavel e re-ordeno os botoes
-                se limpar pelo "ok" do teclado  -> limpo a variavel, o que significa que o componente com a funcao clearSearchBar 
-                                                    vai desrenderizar cancelando a chamada da funcao
-
-                comentar essa linha faz funcionar o primeiro flow, manter ela faz funcionar o segundo flow
-            */
-            // this.auxText = "";
+        onInputSearch(event) {
+            this.inputTextMobile = event.target.value;
         },
         clearSearchBar() {
             this.inputText = "";
-            this.auxText = "";
+            this.inputTextMobile = "";
             this.$store.commit('resetFilteredButtonList');
         },
         updateStore: function (value) {
