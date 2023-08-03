@@ -1,7 +1,7 @@
 <template>
     <div class="instant" :class="{ 'added-opacity': !button.matched }">
         <div class="small-button-background" :style="this.getRandomColor"></div>
-        <button v-if="this.$store.state.isMobile" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
+        <button v-if="this.$store.state.isMobile" ref="buttonRef" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
         <button v-else class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
         <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
@@ -83,7 +83,7 @@ export default {
                     this.loadingAudio = false;
                 })            
         },
-        onTouchStart() {
+        onTouchStart(event) {
             this.held = false;
             this.holdTimer = setTimeout(async () => {
                 this.held = true;
@@ -92,9 +92,18 @@ export default {
             }, 1200);
         },
         async onTouchEnd(event) {
-            
             clearTimeout(this.holdTimer);
             
+            const boundigBoxes = this.$refs.buttonRef.getBoundingClientRect();
+            
+            if (event.changedTouches[0].clientX < boundigBoxes.left || event.changedTouches[0].clientX > boundigBoxes.right) {
+                return;
+            }
+
+            if (event.changedTouches[0].clientY < boundigBoxes.top || event.changedTouches[0].clientY > boundigBoxes.bottom) {
+                return;
+            }
+
             if (!this.held) {
                 this.playSound();
             }
@@ -170,7 +179,7 @@ export default {
 .small-button {
     width: 94px;
     height: 89px;
-    position: absolute;
+    position: absolute;  /*COMMENT OUT THIS LINE TO ADD ANIMATION IN BUTTONS VERTICALLY*/
     border: 0;
     display: block;
     background: url('/public/up.png') no-repeat;

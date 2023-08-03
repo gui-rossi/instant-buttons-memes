@@ -3,7 +3,7 @@
   <div class="app">
     <div class="background-buttons">
       <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
-      <InstantButton v-else v-for="instant in this.$store.state.filteredButtonList" :key="instant.id" :button="instant" />
+      <InstantButton v-for="instant in this.$store.state.filteredButtonList" :key="instant.id" :button="instant" />
     </div>
   </div>
   <!-- <AdSense /> -->
@@ -17,7 +17,6 @@ import AdSense from '../src/components/footer/adsense.vue'
 import Loader from '../src/components/loader/loader.vue'
 import { GetButton } from './services/button_services';
 import { Favorites } from './PreferencesObject';
-import { Preferences } from '@capacitor/preferences';
 
 export default {
   name: 'App',
@@ -67,11 +66,21 @@ export default {
 }
 </script>
 
-<style>
+<style lang="scss">
 body,
 html {
   margin: 0;
   height: 100%;
+  overflow: hidden;
+}
+
+// DELETE BODY > DIV & OVERFLOW: HIDDEN DE BODY, HTML PARA RETIRAR A TELA TRAVADA E VOLTAR AO RUBBER BANDING EFFECT
+// NO BROSWER RETIRA AS BARRAS DE SCROLL
+
+body > div {
+  height: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
 }
 
 .loader-app {
