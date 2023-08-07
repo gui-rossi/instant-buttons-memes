@@ -1,12 +1,8 @@
 <template>
-  <!-- <Navbar />
+  <Navbar />
   <div class="app">
-    <div class="background-buttons">
-      <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
-      <InstantButton v-for="instant in this.$store.state.filteredButtonList" :key="instant.id" :button="instant" />
-    </div>
-  </div> -->
-  <Carousel />
+    <Carousel />
+  </div>
   <!-- <AdSense /> -->
 </template>
 
@@ -22,11 +18,6 @@ import Carousel from './components/carousel.vue';
 
 export default {
   name: 'App',
-  data: function () {
-    return {
-
-    }
-  },
   components: {
     InstantButton,
     Navbar,
@@ -67,21 +58,21 @@ export default {
 </script>
 
 <style lang="scss">
-// body,
-// html {
-//   margin: 0;
-//   height: 100%;
-//   overflow: hidden;
-// }
+body,
+html {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+}
 
 // DELETE BODY > DIV & OVERFLOW: HIDDEN DE BODY, HTML PARA RETIRAR A TELA TRAVADA E VOLTAR AO RUBBER BANDING EFFECT
 // NO BROSWER RETIRA AS BARRAS DE SCROLL
 
-// body > div {
-//   height: 100%;
-//   overflow: scroll;
-//   -webkit-overflow-scrolling: touch;
-// }
+body > div {
+  height: 100%;
+  overflow: scroll;
+  -webkit-overflow-scrolling: touch;
+}
 
 .loader-app {
   display: flex;
@@ -89,23 +80,15 @@ export default {
   align-items: center;
 }
 
-// #app {
-//   display: flex;
-//   background-color: #222222;
-//   justify-content: center;
-// }
+#app {
+  display: flex;
+  background-color: #222222;
+  justify-content: center;
+}
 
 .app {
   background-color: #222222;
   padding-top: 85px;
   min-height: calc(100vh - 85px);
-}
-
-.background-buttons {
-  width: 350px;
-  text-align: center;
-  display: flex;
-  justify-content: space-evenly;
-  flex-wrap: wrap;
 }
 </style>

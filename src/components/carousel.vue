@@ -13,12 +13,14 @@
 
     <div class="holster" @touchend="onTouchEnd">
       <div class="carousel" ref="carouselRef">
-        <div class="carousel-item cart">
-          <h2>Your Cart</h2>
+        <div class="background-buttons carousel-item">
+          <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
+          <InstantButton v-for="instant in this.$store.state.filteredButtonList" :key="instant.id" :button="instant" />
         </div>
 
-        <div class="carousel-item products">
-          <h2>Available Products</h2>
+        <div class="background-buttons carousel-item">
+          <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
+          <InstantButton v-for="instant in this.$store.state.favoritedButtonsList" :key="instant.id" :button="instant" />
         </div>
       </div>
     </div>
@@ -27,6 +29,9 @@
 
 <script>
 /* eslint-disable */
+import InstantButton from './instant-button/instant-button.vue';
+import Loader from './loader/loader.vue';
+
 export default {
   name: "carousel",
   data() {
@@ -34,6 +39,10 @@ export default {
       allButtons: true,
       favorites: false,
     };
+  },
+  components: {
+    InstantButton,
+    Loader,
   },
   mounted: function () {
     const width = this.$refs.carouselRef.scrollWidth;
@@ -73,7 +82,7 @@ export default {
   align-items: center;
   justify-content: space-between;
   flex-flow: column nowrap;
-  font-family: monospace;
+  // font-family: monospace;
   height: 100%;
 }
 
@@ -87,21 +96,24 @@ export default {
   display: flex;
   flex: none;
   flex-flow: nowrap;
-  height: 400px;
   width: 100%;
-  background-color: yellow;
   scroll-snap-type: x mandatory;
   overflow-x: auto;
 }
 
 .carousel-item {
-  display: flex;
-  justify-content: center;
-  align-items: center;
   box-sizing: border-box;
   min-width: 100%;
   overflow-x: auto;
   transition: opacity 0.3s ease-in-out;
+}
+
+.background-buttons {
+  width: 175px;
+  text-align: center;
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 }
 
 .view-switcher {
@@ -112,7 +124,7 @@ export default {
 }
 
 .view-item {
-  background-color: green;
+  background-color: white;
   height: 4px;
   width: 45%;
   border-radius: 8px;
@@ -126,6 +138,7 @@ export default {
 .view-item-content {
   margin-bottom: 16px;
   font-weight: bolder;
+  color: white;
 }
 
 .view-item-active {

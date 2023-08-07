@@ -24,7 +24,7 @@ const store = createStore({
       state.filteredButtonList = customSort(filteredStr, state.filteredButtonList);
     },
     resetFilteredButtonList(state) {
-      state.filteredButtonList = state.buttonList;
+      state.filteredButtonList = sortAlphabetically(state.buttonList);
       for (var i = 0; i < state.filteredButtonList.length; i++) {
         state.filteredButtonList[i].matched = true;
       }
@@ -33,7 +33,7 @@ const store = createStore({
       state.audio.src = src;
     },
     setFavoritedList(state, favorites) {
-      state.favoritedButtonsList = favorites;
+      state.favoritedButtonsList = sortAlphabetically(favorites);
 
       Favorites.setObject(favorites);
     },
@@ -46,6 +46,23 @@ const store = createStore({
     },
   },
 })
+
+function sortAlphabetically(array) {
+  const sortedArray = array.sort((a, b) => {
+    const nameA = a.name.toLowerCase();
+    const nameB = b.name.toLowerCase();
+
+    if (nameA < nameB) {
+      return -1;
+    }
+    if (nameA > nameB) {
+      return 1;
+    }
+    return 0;
+  });
+
+  return sortedArray;
+}
 
 function customSort(substring, arr) {
   return arr.slice().sort((s1, s2) => comparator(substring, s1, s2));
