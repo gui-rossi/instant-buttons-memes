@@ -1,6 +1,6 @@
 <template>
     <div class="instant" :class="{ 'added-opacity': !button.matched }">
-        <div class="small-button-background" :style="this.getRandomColor"></div>
+        <div class="small-button-background" :style="this.getRandomColorEnhanced"></div>
         <button v-if="this.$store.state.isMobile" ref="buttonRef" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
         <button v-else class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
@@ -44,6 +44,11 @@ export default {
                 return true;
             else
                 return false;
+        },
+        getRandomColorEnhanced: function () {
+            var cor = `background-color: rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+
+            return cor;
         },
         getRandomColor: function () {
             var val1 = Math.floor(Math.random() * 6);

@@ -1,28 +1,27 @@
 <template>
-  <Navbar />
+  <!-- <Navbar />
   <div class="app">
     <div class="background-buttons">
       <Loader v-if="this.$store.state.buttonList.length == 0" class="loader-app" />
       <InstantButton v-for="instant in this.$store.state.filteredButtonList" :key="instant.id" :button="instant" />
     </div>
-  </div>
+  </div> -->
+  <Carousel />
   <!-- <AdSense /> -->
 </template>
 
 <script>
 /* eslint-disable */
-import InstantButton from '../src/components/instant-button/instant-button.vue'
-import Navbar from '../src/components/navbar/navbar.vue'
-import AdSense from '../src/components/footer/adsense.vue'
-import Loader from '../src/components/loader/loader.vue'
+import InstantButton from '../src/components/instant-button/instant-button.vue';
+import Navbar from '../src/components/navbar/navbar.vue';
+import AdSense from '../src/components/footer/adsense.vue';
+import Loader from '../src/components/loader/loader.vue';
 import { GetButton } from './services/button_services';
 import { Favorites } from './PreferencesObject';
+import Carousel from './components/carousel.vue';
 
 export default {
   name: 'App',
-  components: {
-
-  },
   data: function () {
     return {
 
@@ -33,15 +32,16 @@ export default {
     Navbar,
     AdSense,
     Loader,
+    Carousel,
   },
   mounted: async function () {
     this.$store.commit("setIsMobile");
-    
+
     this.fetchData();
-    
+
     if (!this.$store.state.isMobile)
-    return;
-    
+      return;
+
     await this.loadFavorited();
   },
   methods: {
@@ -67,21 +67,21 @@ export default {
 </script>
 
 <style lang="scss">
-body,
-html {
-  margin: 0;
-  height: 100%;
-  overflow: hidden;
-}
+// body,
+// html {
+//   margin: 0;
+//   height: 100%;
+//   overflow: hidden;
+// }
 
 // DELETE BODY > DIV & OVERFLOW: HIDDEN DE BODY, HTML PARA RETIRAR A TELA TRAVADA E VOLTAR AO RUBBER BANDING EFFECT
 // NO BROSWER RETIRA AS BARRAS DE SCROLL
 
-body > div {
-  height: 100%;
-  overflow: scroll;
-  -webkit-overflow-scrolling: touch;
-}
+// body > div {
+//   height: 100%;
+//   overflow: scroll;
+//   -webkit-overflow-scrolling: touch;
+// }
 
 .loader-app {
   display: flex;
@@ -89,11 +89,11 @@ body > div {
   align-items: center;
 }
 
-#app {
-  display: flex;
-  background-color: #222222;
-  justify-content: center;
-}
+// #app {
+//   display: flex;
+//   background-color: #222222;
+//   justify-content: center;
+// }
 
 .app {
   background-color: #222222;
