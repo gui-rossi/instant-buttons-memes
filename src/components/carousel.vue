@@ -16,8 +16,6 @@
         <div class="background-buttons carousel-item">
           <Loader v-if="$store.state.buttonList.length == 0" class="loader-app" />
           <InstantButton v-for="instant in $store.state.filteredButtonList" :key="instant.id" :button="instant" />
-          <InstantButton v-for="instant in $store.state.filteredButtonList" :key="instant.id + 'a'" :button="instant" />
-          <InstantButton v-for="instant in $store.state.filteredButtonList" :key="instant.id + 'b'" :button="instant" />
         </div>
       </div>
 
