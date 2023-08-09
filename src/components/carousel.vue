@@ -13,14 +13,14 @@
 
     <div class="holster" ref="carouselRef">
       <div class="carousel">
-        <div class="background-buttons carousel-item">
+        <div class="background-buttons carousel-item" ref="allButtonsCarouselRef">
           <Loader v-if="$store.state.buttonList.length == 0" class="loader-app" />
           <InstantButton v-for="instant in $store.state.filteredButtonList" :key="instant.id" :button="instant" />
         </div>
       </div>
 
       <div class="carousel">
-        <div class="background-buttons carousel-item">
+        <div class="background-buttons carousel-item" ref="favoritesCarouselRef">
           <Loader v-if="$store.state.buttonList.length == 0" class="loader-app" />
           <InstantButton v-for="instant in $store.state.favoritedButtonsList" :key="instant.id" :button="instant" />
           <div v-if="!$store.state.favoritedButtonsList.length" class="no-favorites">
@@ -71,6 +71,15 @@ export default {
   },
   methods: {
     onFavorites(e) {
+      if (this.favorites) {
+        this.$refs.favoritesCarouselRef.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+        
+        return;
+      }
+      
       const width = this.$refs.carouselRef.scrollWidth / 2;
 
       this.$refs.carouselRef.scrollTo({
@@ -79,6 +88,15 @@ export default {
       });
     },
     onAllButtons(e) {
+      if (this.allButtons) {
+        this.$refs.allButtonsCarouselRef.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+        
+        return;
+      }
+
       this.$refs.carouselRef.scrollTo({
         left: 0,
         behavior: "smooth"

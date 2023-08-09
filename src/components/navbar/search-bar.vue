@@ -23,7 +23,6 @@ export default {
         return {
             inputText: "",
             inputTextMobile: "",
-            inputTextMobileAux: "",
 
             pressedEnter: 0,
         }

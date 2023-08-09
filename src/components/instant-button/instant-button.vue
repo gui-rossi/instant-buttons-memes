@@ -48,7 +48,7 @@ export default {
         },
         getRandomColorEnhanced: function () {
             var cor = `background-color: rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-
+            
             return cor;
         },
         getRandomColor: function () {
@@ -93,14 +93,12 @@ export default {
             this.held = false;
 
             const boundigBoxes = this.$refs.buttonRef.getBoundingClientRect();
-
-            this.clickedButtonInfos = { 
-                offSetLeft: event.changedTouches[0].clientX - boundigBoxes.left, 
-                offSetRight: boundigBoxes.right - event.changedTouches[0].clientX,
-                offSetTop: event.changedTouches[0].clientY - boundigBoxes.top,
-                offSetBottom: boundigBoxes.bottom - event.changedTouches[0].clientY,
-                touchPosX: event.changedTouches[0].clientX,
-                touchPosY: event.changedTouches[0].clientY
+            
+            this.clickedButtonInfos = {
+                left: boundigBoxes.left, 
+                right: boundigBoxes.right,
+                top: boundigBoxes.top,
+                bottom: boundigBoxes.bottom,
             };
 
             this.holdTimer = setTimeout(async () => {
@@ -111,11 +109,11 @@ export default {
         },
         async onTouchEnd(event) {
             clearTimeout(this.holdTimer);
-            
-            if (event.changedTouches[0].clientX > this.clickedButtonInfos.touchPosX + this.clickedButtonInfos.offSetRight ||
-                event.changedTouches[0].clientX < this.clickedButtonInfos.touchPosX - this.clickedButtonInfos.offSetLeft ||
-                event.changedTouches[0].clientY > this.clickedButtonInfos.touchPosY + this.clickedButtonInfos.offSetBottom ||
-                event.changedTouches[0].clientY < this.clickedButtonInfos.touchPosY - this.clickedButtonInfos.offSetTop){
+
+            if (event.changedTouches[0].clientX > this.clickedButtonInfos.right ||
+                event.changedTouches[0].clientX < this.clickedButtonInfos.left ||
+                event.changedTouches[0].clientY > this.clickedButtonInfos.bottom ||
+                event.changedTouches[0].clientY < this.clickedButtonInfos.top){
                 return;
             }
 
@@ -219,7 +217,8 @@ export default {
     color: white;
     position: absolute;
     margin-top: 90px;
-    height: 37px;
+    /* height: 37px; */
     overflow: hidden;
+    font-size: small;
 }
 </style>

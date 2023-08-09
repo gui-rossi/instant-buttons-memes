@@ -8,6 +8,8 @@
 
 <script>
 /* eslint-disable */
+import './assets/fonts.css';
+
 import InstantButton from '../src/components/instant-button/instant-button.vue';
 import Navbar from '../src/components/navbar/navbar.vue';
 import AdSense from '../src/components/footer/adsense.vue';
@@ -63,6 +65,7 @@ html {
   margin: 0;
   height: 100%;
   overflow: hidden;
+  font-family: 'Roboto', sans-serif;
 }
 
 // DELETE BODY > DIV & OVERFLOW: HIDDEN DE BODY, HTML PARA RETIRAR A TELA TRAVADA E VOLTAR AO RUBBER BANDING EFFECT
