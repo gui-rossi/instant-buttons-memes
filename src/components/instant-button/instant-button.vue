@@ -27,6 +27,7 @@ export default {
 
             held: false,
             holdTimer: null,
+            clickedButtonInfos: null,
         }
     },
     props: {
@@ -90,6 +91,18 @@ export default {
         },
         onTouchStart(event) {
             this.held = false;
+
+            const boundigBoxes = this.$refs.buttonRef.getBoundingClientRect();
+
+            this.clickedButtonInfos = { 
+                offSetLeft: event.changedTouches[0].clientX - boundigBoxes.left, 
+                offSetRight: boundigBoxes.right - event.changedTouches[0].clientX,
+                offSetTop: event.changedTouches[0].clientY - boundigBoxes.top,
+                offSetBottom: boundigBoxes.bottom - event.changedTouches[0].clientY,
+                touchPosX: event.changedTouches[0].clientX,
+                touchPosY: event.changedTouches[0].clientY
+            };
+
             this.holdTimer = setTimeout(async () => {
                 this.held = true;
 
@@ -99,13 +112,10 @@ export default {
         async onTouchEnd(event) {
             clearTimeout(this.holdTimer);
             
-            const boundigBoxes = this.$refs.buttonRef.getBoundingClientRect();
-            
-            if (event.changedTouches[0].clientX < boundigBoxes.left || event.changedTouches[0].clientX > boundigBoxes.right) {
-                return;
-            }
-
-            if (event.changedTouches[0].clientY < boundigBoxes.top || event.changedTouches[0].clientY > boundigBoxes.bottom) {
+            if (event.changedTouches[0].clientX > this.clickedButtonInfos.touchPosX + this.clickedButtonInfos.offSetRight ||
+                event.changedTouches[0].clientX < this.clickedButtonInfos.touchPosX - this.clickedButtonInfos.offSetLeft ||
+                event.changedTouches[0].clientY > this.clickedButtonInfos.touchPosY + this.clickedButtonInfos.offSetBottom ||
+                event.changedTouches[0].clientY < this.clickedButtonInfos.touchPosY - this.clickedButtonInfos.offSetTop){
                 return;
             }
 
