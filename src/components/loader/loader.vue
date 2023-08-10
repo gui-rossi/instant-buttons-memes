@@ -15,7 +15,7 @@ export default {
 
 <style>
 .load-4 .ring-1 {
-    animation: loadingD 1.5s 0.3s cubic-bezier(0.17, 0.37, 0.43, 0.67) infinite;
+    animation: loadingD 0.8s 0s linear infinite;
 }
 
 .ring-1 {

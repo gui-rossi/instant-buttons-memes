@@ -1,11 +1,10 @@
 <template>
-    <div class="instant" :class="{ 'added-opacity': !button.matched }">
-        <div class="small-button-background" :style="this.getRandomColorEnhanced"></div>
+    <div class="instant" :class="{ 'added-opacity': !button.matched }" :style="{ 'marginBottom': this.loadingAudio ? '96px' : '150px' }">
+        <div class="small-button-background" :style="{ '--dynamic-color-standard': this.buttonColor, '--dynamic-color-playing': this.buttonColor }"></div>
         <button v-if="this.$store.state.isMobile" ref="buttonRef" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
         <button v-else class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
-        <!-- <Loader v-if="loadingAudio" style="margin-top: 10px;" /> -->
-        <!-- <Playing style="margin-top: 10px; margin-left: -23px;" /> -->
+        <Loader v-if="this.loadingAudio" style="margin-top: 10px;" />
         <div class="instant-button-name">{{ button.name }}</div>
         <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']" class="favorite-icon-regular" />
         <font-awesome-icon v-else @click="addOrRemoveFavorite" :icon="['fas', 'heart']" class="favorite-icon-solid" />
@@ -14,7 +13,6 @@
 
 <script>
 import Loader from '../loader/loader.vue';
-import Playing from '../play-animation/playing.vue';
 import { GetButton } from '../../services/button_services';
 
 /* eslint-disable */
@@ -24,6 +22,8 @@ export default {
     data: function () {
         return {
             loadingAudio: false,
+            playingAudio: false,
+            buttonColor: "",
 
             held: false,
             holdTimer: null,
@@ -35,7 +35,9 @@ export default {
     },
     components: {
         Loader,
-        Playing
+    },
+    mounted: function () {
+      this.buttonColor = this.getRandomColorEnhanced();
     },
     computed: {
         verifyIfFavorite: function () {
@@ -45,11 +47,6 @@ export default {
                 return true;
             else
                 return false;
-        },
-        getRandomColorEnhanced: function () {
-            var cor = `background-color: rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-            
-            return cor;
         },
         getRandomColor: function () {
             var val1 = Math.floor(Math.random() * 6);
@@ -73,6 +70,11 @@ export default {
         }
     },
     methods: {
+        getRandomColorEnhanced: function () {
+            var cor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+            
+            return cor;
+        },
         playSound: function () {
             this.loadingAudio = true;
 
@@ -145,7 +147,7 @@ export default {
 
 </script>
 
-<style>
+<style lang="scss">
 .favorite-icon-regular {
     color: #ff0000;
     position: absolute;
@@ -182,11 +184,26 @@ export default {
 }
 
 .small-button-background {
+    --dynamic-color-standard: #ffffff;
+    --dynamic-color-playing: #ffffff;
+    
     border-radius: 50%;
     width: 86px;
     height: 84px;
     margin-top: 3px;
     position: absolute;
+    background-color: var(--dynamic-color-standard);
+}
+
+.small-button-background::before  {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--dynamic-color-playing);
+  border-radius: 50%;
+  animation: expandFade 1s ease-in-out infinite;
 }
 
 .small-button {
@@ -220,5 +237,17 @@ export default {
     /* height: 37px; */
     overflow: hidden;
     font-size: small;
+}
+
+@keyframes expandFade {
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(1.5);
+    opacity: 0;
+  }
 }
 </style>
