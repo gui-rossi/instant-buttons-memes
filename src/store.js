@@ -13,15 +13,19 @@ const store = createStore({
 
       favoritedButtonsList: [],
       isMobile: false,
+
+      allButtonsRef: null,
+      favoritedButtonsRef: null,
     }
   },
   mutations: {
     setButtonListVars(state, buttons) {
-      state.buttonList = buttons;
-      state.filteredButtonList = buttons;
+      state.buttonList = [...buttons];
+      state.filteredButtonList = [...buttons];
     },
+
     setFilteredButtonList(state, filteredStr) {
-      state.filteredButtonList = customSort(filteredStr, state.filteredButtonList);
+      state.filteredButtonList = customSort(filteredStr, state.buttonList);
     },
     resetFilteredButtonList(state) {
       state.filteredButtonList = sortAlphabetically(state.buttonList);
@@ -29,12 +33,23 @@ const store = createStore({
         state.filteredButtonList[i].matched = true;
       }
     },
+
+    setFilteredFavoritedList(state, filteredStr) {
+      state.favoritedButtonsList = customSort(filteredStr, state.favoritedButtonsList);
+    },
+    resetFavoritedButtonList(state) {
+      state.favoritedButtonsList = sortAlphabetically(state.favoritedButtonsList);
+      for (var i = 0; i < state.favoritedButtonsList.length; i++) {
+        state.favoritedButtonsList[i].matched = true;
+      }
+    },
+
     playAudio(state, src) {
       state.audio.src = src;
     },
     setFavoritedList(state, favorites) {
       state.favoritedButtonsList = sortAlphabetically(favorites);
-
+      
       Favorites.setObject(favorites);
     },
     setIsMobile(state) {
@@ -44,7 +59,28 @@ const store = createStore({
         state.isMobile = false;
       }
     },
+    setFavoritedButtonRef(state, ref){
+      state.favoritedButtonsRef = ref;
+    },
+    setAllButtonsRef(state, ref){
+      state.allButtonsRef = ref;
+    }
   },
+  actions: {
+    initiateButtons(context, array){
+      context.commit('setButtonListVars', array);
+      context.commit('resetFilteredButtonList');
+      context.commit('resetFavoritedButtonList');
+    },
+    resetButtons(context){
+      context.commit('resetFilteredButtonList');
+      context.commit('resetFavoritedButtonList');
+    },
+    filterButtons(context, value){
+      context.commit('setFilteredButtonList', value);
+      context.commit('setFilteredFavoritedList', value);
+    }
+  }
 })
 
 function sortAlphabetically(array) {

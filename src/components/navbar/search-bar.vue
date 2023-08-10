@@ -45,6 +45,15 @@ export default {
     methods: {
         onInputSearch(event) {
             this.inputTextMobile = event.target.value;
+
+            this.$store.state.allButtonsRef.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+            this.$store.state.favoritedButtonsRef.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
         },
         clearSearchBar() {
             this.inputText = "";
@@ -53,10 +62,10 @@ export default {
         },
         updateStore: function (value) {
             if (value == "") {
-                this.$store.commit('resetFilteredButtonList');
+                this.$store.dispatch('resetButtons');
             }
             else {
-                this.$store.commit('setFilteredButtonList', value);
+                this.$store.dispatch('filterButtons', value);
             }
         },
     }

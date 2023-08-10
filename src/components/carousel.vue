@@ -68,6 +68,9 @@ export default {
     };
 
     this.$refs.carouselRef.addEventListener("scroll", onAllButtonsScroll);
+
+    this.$store.commit('setFavoritedButtonRef', this.$refs.favoritesCarouselRef);
+    this.$store.commit('setAllButtonsRef', this.$refs.allButtonsCarouselRef);
   },
   methods: {
     onFavorites(e) {

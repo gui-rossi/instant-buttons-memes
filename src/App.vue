@@ -45,7 +45,7 @@ export default {
             return { ...obj, matched: true, favorited: false };
           });
 
-          this.$store.commit('setButtonListVars', updatedList)
+          this.$store.dispatch('initiateButtons', updatedList);
         })
         .catch((error) => {
           console.error("Error fetching data: ", error);
@@ -53,6 +53,7 @@ export default {
     },
     loadFavorited: async function () {
       const favoritedArray = await Favorites.getObject();
+      
       this.$store.commit('setFavoritedList', favoritedArray);
     },
   },
@@ -71,7 +72,7 @@ html {
 // DELETE BODY > DIV & OVERFLOW: HIDDEN DE BODY, HTML PARA RETIRAR A TELA TRAVADA E VOLTAR AO RUBBER BANDING EFFECT
 // NO BROSWER RETIRA AS BARRAS DE SCROLL
 
-body > div {
+body>div {
   height: 100%;
   overflow: scroll;
   -webkit-overflow-scrolling: touch;
