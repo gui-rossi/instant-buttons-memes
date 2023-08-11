@@ -2,7 +2,7 @@ import { createStore } from 'vuex'
 import { Favorites } from './PreferencesObject';
 
 /* eslint-disable */
-
+// comment
 const store = createStore({
   state() {
     return {
