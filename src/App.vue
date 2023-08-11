@@ -42,7 +42,7 @@ export default {
       GetButton.fetchButtons()
         .then((response) => {
           const updatedList = response.data.map((obj) => {
-            return { ...obj, matched: true, favorited: false };
+            return { ...obj, matched: true, favorited: false, playing: "" };
           });
 
           this.$store.dispatch('initiateButtons', updatedList);

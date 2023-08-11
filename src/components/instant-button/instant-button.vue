@@ -1,6 +1,6 @@
 <template>
     <div class="instant" :class="{ 'added-opacity': !button.matched }" :style="{ 'marginBottom': this.loadingAudio ? '96px' : '150px' }">
-        <div class="small-button-background" :style="{ '--dynamic-color-standard': this.buttonColor, '--dynamic-color-playing': this.buttonColor }"></div>
+        <div class="small-button-background" :style="{ '--dynamic-color-standard': this.buttonColor, '--dynamic-color-playing': button.playing }"></div>
         <button v-if="this.$store.state.isMobile" ref="buttonRef" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
         <button v-else class="small-button" @click="playSound"></button>
         <div class="small-button-shadow"></div>
@@ -22,7 +22,6 @@ export default {
     data: function () {
         return {
             loadingAudio: false,
-            playingAudio: false,
             buttonColor: "",
 
             held: false,
@@ -80,9 +79,7 @@ export default {
 
             GetButton.fetchButtonFile(this.button.id)
                 .then(response => {
-                    this.$store.commit('playAudio', `data:audio/x-wav;base64, ${response.data.file}`);
-                    
-                    this.$store.state.audio.play().catch(_ => _);
+                    this.$store.dispatch("playAudio", { audio: `data:audio/x-wav;base64, ${response.data.file}`, buttonInfos: {button: this.button, color: this.buttonColor} })
                 })
                 .catch(err => {
                     console.error("Error while loading file!", err);
@@ -184,8 +181,8 @@ export default {
 }
 
 .small-button-background {
-    --dynamic-color-standard: #ffffff;
-    --dynamic-color-playing: #ffffff;
+    --dynamic-color-standard: "";
+    --dynamic-color-playing: "";
     
     border-radius: 50%;
     width: 86px;

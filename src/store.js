@@ -9,7 +9,7 @@ const store = createStore({
     return {
       buttonList: [],
       filteredButtonList: [],
-      audio: new Audio(),
+      audioConfig: { audio: new Audio(), buttonClicked: null },
 
       favoritedButtonsList: [],
       isMobile: false,
@@ -44,12 +44,29 @@ const store = createStore({
       }
     },
 
-    playAudio(state, src) {
-      state.audio.src = src;
+    setButtonClicked(state, buttonInfos) {
+      if (state.audioConfig.buttonClicked) {
+        state.audioConfig.buttonClicked.playing = "";
+      }
+      state.audioConfig.buttonClicked = buttonInfos.button;
+      state.audioConfig.buttonClicked.playing = buttonInfos.color;
     },
+    setAudio(state, src) {
+      state.audioConfig.audio.src = src;
+    },
+    playAudio(state) {
+      state.audioConfig.audio.removeEventListener('ended', () => {});
+
+      state.audioConfig.audio.addEventListener('ended', function () {
+        state.audioConfig.buttonClicked.playing = "";
+      });
+
+      state.audioConfig.audio.play().catch(_ => _);
+    },
+
     setFavoritedList(state, favorites) {
       state.favoritedButtonsList = sortAlphabetically(favorites);
-      
+
       Favorites.setObject(favorites);
     },
     setIsMobile(state) {
@@ -59,26 +76,31 @@ const store = createStore({
         state.isMobile = false;
       }
     },
-    setFavoritedButtonRef(state, ref){
+    setFavoritedButtonRef(state, ref) {
       state.favoritedButtonsRef = ref;
     },
-    setAllButtonsRef(state, ref){
+    setAllButtonsRef(state, ref) {
       state.allButtonsRef = ref;
     }
   },
   actions: {
-    initiateButtons(context, array){
+    initiateButtons(context, array) {
       context.commit('setButtonListVars', array);
       context.commit('resetFilteredButtonList');
       context.commit('resetFavoritedButtonList');
     },
-    resetButtons(context){
+    resetButtons(context) {
       context.commit('resetFilteredButtonList');
       context.commit('resetFavoritedButtonList');
     },
-    filterButtons(context, value){
+    filterButtons(context, value) {
       context.commit('setFilteredButtonList', value);
       context.commit('setFilteredFavoritedList', value);
+    },
+    playAudio(context, audioAndButtonInfos) {
+      context.commit('setButtonClicked', audioAndButtonInfos.buttonInfos);
+      context.commit('setAudio', audioAndButtonInfos.audio);
+      context.commit('playAudio');
     }
   }
 })
