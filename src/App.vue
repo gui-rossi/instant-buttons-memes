@@ -53,7 +53,7 @@ export default {
     },
     loadFavorited: async function () {
       const favoritedArray = await Favorites.getObject();
-      
+
       this.$store.commit('setFavoritedList', favoritedArray);
     },
   },
@@ -95,4 +95,5 @@ body>div {
   padding-top: 85px;
   min-height: calc(100vh - 85px);
 }
+
 </style>
