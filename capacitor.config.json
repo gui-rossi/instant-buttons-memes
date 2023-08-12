@@ -1,6 +1,6 @@
 {
   "appId": "botoes.memes",
-  "appName": "Botoes Memes",
+  "appName": "Botões Memes",
   "webDir": "dist",
   "server": {
     "androidScheme": "https",

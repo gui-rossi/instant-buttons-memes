@@ -8,7 +8,7 @@
 
 <script>
 /* eslint-disable */
-import './assets/fonts.css';
+import './fonts/fonts.css';
 
 import InstantButton from '../src/components/instant-button/instant-button.vue';
 import Navbar from '../src/components/navbar/navbar.vue';
