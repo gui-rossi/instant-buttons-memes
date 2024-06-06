@@ -59,6 +59,10 @@ export default {
             this.inputText = "";
             this.inputTextMobile = "";
             this.$store.commit('resetFilteredButtonList');
+            // this.$store.state.allButtonsRef.scrollTo({
+            //     top: 8717,
+            //     behavior: "smooth"
+            // });
         },
         updateStore: function (value) {
             if (value == "") {

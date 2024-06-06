@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Create a new instance of axios with custom configurations
 const instance = axios.create({
-  baseURL: 'http://192.168.15.31:7130/api', // Replace with your API base URL
+  baseURL: 'https://instant-buttons-api.azurewebsites.net/api', // Replace with your API base URL
   timeout: 100000, // Set the maximum timeout for requests (in milliseconds)
   headers: { 'Accept': 'application/json', 'Content-Type': 'application/json; charset=UTF-8' }
 });
