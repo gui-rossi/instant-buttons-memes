@@ -1,10 +1,5 @@
 {
   "appId": "botoes.memes",
   "appName": "Botões Memes",
-  "webDir": "dist",
-  "server": {
-    "androidScheme": "https",
-    "url": "https://instant-buttons-ui.azurewebsites.net/",
-    "cleartext": true
-  }
+  "webDir": "dist"
 }

@@ -17,6 +17,7 @@ import Loader from '../src/components/loader/loader.vue';
 import { GetButton } from './services/button_services';
 import { Favorites } from './PreferencesObject';
 import Carousel from './components/carousel.vue';
+import { listFiles, getFile } from './services/axios';
 
 export default {
   name: 'App',
@@ -27,33 +28,27 @@ export default {
     Loader,
     Carousel,
   },
-  mounted: async function () {
-    this.$store.commit("setIsMobile");
+  mounted: function () {
+    this.fetchFiles();
 
-    this.fetchData();
-
-    if (!this.$store.state.isMobile)
-      return;
-
-    await this.loadFavorited();
+    this.loadFavorited();
   },
   methods: {
-    fetchData() {
-      GetButton.fetchButtons()
-        .then((response) => {
-          const updatedList = response.data.map((obj) => {
+    fetchFiles: async function () {
+      try {
+        var response = await listFiles();
+
+        const updatedList = response.map((obj) => {
             return { ...obj, matched: true, favorited: false, playing: "" };
           });
 
-          this.$store.dispatch('initiateButtons', updatedList);
-        })
-        .catch((error) => {
-          console.error("Error fetching data: ", error);
-        });
+        this.$store.dispatch('initiateButtons', updatedList);
+      } catch (error) {
+        console.error('Error fetching files:', error);
+      }
     },
     loadFavorited: async function () {
       const favoritedArray = await Favorites.getObject();
-
       this.$store.commit('setFavoritedList', favoritedArray);
     },
   },

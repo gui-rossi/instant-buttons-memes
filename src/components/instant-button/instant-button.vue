@@ -1,12 +1,16 @@
 <template>
-    <div class="instant" :class="{ 'added-opacity': !button.matched }" :style="{ 'marginBottom': this.loadingAudio ? '96px' : '150px' }">
-        <div class="small-button-background" :style="{ '--dynamic-color-standard': this.buttonColor, '--dynamic-color-playing': button.playing }"></div>
-        <button v-if="this.$store.state.isMobile" ref="buttonRef" class="small-button" @touchstart="onTouchStart" @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
-        <button v-else class="small-button" @click="playSound"></button>
+    <div class="instant" :class="{ 'added-opacity': !button.matched }"
+        :style="{ 'marginBottom': this.loadingAudio ? '96px' : '150px' }">
+        <div class="small-button-background"
+            :style="{ '--dynamic-color-standard': this.buttonColor, '--dynamic-color-playing': button.playing }"></div>
+        <button v-if="this.$store.state.isMobile" ref="buttonRef" class="small-button" @touchstart="onTouchStart"
+            @touchend="onTouchEnd" @touchcancel="onTouchCancel"></button>
+        <button v-else class="small-button" @click="playFile"></button>
         <div class="small-button-shadow"></div>
         <Loader v-if="this.loadingAudio" style="margin-top: 10px;" />
         <div class="instant-button-name">{{ button.name }}</div>
-        <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']" class="favorite-icon-regular" />
+        <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']"
+            class="favorite-icon-regular" />
         <font-awesome-icon v-else @click="addOrRemoveFavorite" :icon="['fas', 'heart']" class="favorite-icon-solid" />
     </div>
 </template>
@@ -14,6 +18,7 @@
 <script>
 import Loader from '../loader/loader.vue';
 import { GetButton } from '../../services/button_services';
+import { getFile } from '../../services/axios';
 
 /* eslint-disable */
 
@@ -36,7 +41,7 @@ export default {
         Loader,
     },
     mounted: function () {
-      this.buttonColor = this.getRandomColorEnhanced();
+        this.buttonColor = this.getRandomColorEnhanced();
     },
     computed: {
         verifyIfFavorite: function () {
@@ -71,30 +76,44 @@ export default {
     methods: {
         getRandomColorEnhanced: function () {
             var cor = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
-            
+
             return cor;
+        },
+        playFile: async function () {
+            this.loadingAudio = true;
+
+            try {
+                const fileBlob = await getFile(this.button.id);
+                var base64 = await this.blobToBase64(fileBlob);
+
+                this.$store.dispatch("playAudio", { audio: `${base64}`, buttonInfos: { button: this.button, color: this.buttonColor } })
+            } catch (error) {
+                console.error('Error playing file:', error);
+            } finally {
+                this.loadingAudio = false;
+            }
         },
         playSound: function () {
             this.loadingAudio = true;
 
             GetButton.fetchButtonFile(this.button.id)
                 .then(response => {
-                    this.$store.dispatch("playAudio", { audio: `data:audio/x-wav;base64, ${response.data.file}`, buttonInfos: {button: this.button, color: this.buttonColor} })
+                    this.$store.dispatch("playAudio", { audio: `data:audio/x-wav;base64, ${response.data.file}`, buttonInfos: { button: this.button, color: this.buttonColor } })
                 })
                 .catch(err => {
                     console.error("Error while loading file!", err);
                 })
                 .finally(_ => {
                     this.loadingAudio = false;
-                })            
+                })
         },
         onTouchStart(event) {
             this.held = false;
 
             const boundigBoxes = this.$refs.buttonRef.getBoundingClientRect();
-            
+
             this.clickedButtonInfos = {
-                left: boundigBoxes.left, 
+                left: boundigBoxes.left,
                 right: boundigBoxes.right,
                 top: boundigBoxes.top,
                 bottom: boundigBoxes.bottom,
@@ -112,14 +131,15 @@ export default {
             if (event.changedTouches[0].clientX > this.clickedButtonInfos.right ||
                 event.changedTouches[0].clientX < this.clickedButtonInfos.left ||
                 event.changedTouches[0].clientY > this.clickedButtonInfos.bottom ||
-                event.changedTouches[0].clientY < this.clickedButtonInfos.top){
+                event.changedTouches[0].clientY < this.clickedButtonInfos.top) {
                 return;
             }
 
             if (!this.held) {
-                this.playSound();
+                // this.playSound();
+                playFile();
             }
-            
+
             event.stopPropagation();
         },
         onTouchCancel() {
@@ -139,6 +159,13 @@ export default {
                 this.$store.commit('setFavoritedList', favorites);
             }
         },
+        blobToBase64: async function (blob) {
+            return new Promise((resolve, _) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result);
+                reader.readAsDataURL(blob);
+            });
+        }
     }
 }
 
@@ -183,7 +210,7 @@ export default {
 .small-button-background {
     --dynamic-color-standard: "";
     --dynamic-color-playing: "";
-    
+
     border-radius: 50%;
     width: 86px;
     height: 84px;
@@ -192,21 +219,22 @@ export default {
     background-color: var(--dynamic-color-standard);
 }
 
-.small-button-background::before  {
-  content: "";
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--dynamic-color-playing);
-  border-radius: 50%;
-  animation: expandFade 1s ease-in-out infinite;
+.small-button-background::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--dynamic-color-playing);
+    border-radius: 50%;
+    animation: expandFade 1s ease-in-out infinite;
 }
 
 .small-button {
     width: 94px;
     height: 89px;
-    position: absolute;  /*COMMENT OUT THIS LINE TO ADD ANIMATION IN BUTTONS VERTICALLY*/
+    position: absolute;
+    /*COMMENT OUT THIS LINE TO ADD ANIMATION IN BUTTONS VERTICALLY*/
     border: 0;
     display: block;
     background: url('/public/up.png') no-repeat;
@@ -237,14 +265,14 @@ export default {
 }
 
 @keyframes expandFade {
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
+    0% {
+        transform: scale(1);
+        opacity: 1;
+    }
 
-  100% {
-    transform: scale(1.5);
-    opacity: 0;
-  }
+    100% {
+        transform: scale(1.5);
+        opacity: 0;
+    }
 }
 </style>
