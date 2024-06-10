@@ -14,10 +14,9 @@ import InstantButton from '../src/components/instant-button/instant-button.vue';
 import Navbar from '../src/components/navbar/navbar.vue';
 import AdSense from '../src/components/footer/adsense.vue';
 import Loader from '../src/components/loader/loader.vue';
-import { GetButton } from './services/button_services';
 import { Favorites } from './PreferencesObject';
 import Carousel from './components/carousel.vue';
-import { listFiles, getFile } from './services/axios';
+import { listFiles } from './services/axios';
 
 export default {
   name: 'App',
@@ -39,6 +38,7 @@ export default {
         var response = await listFiles();
 
         const updatedList = response.map((obj) => {
+            obj.name = obj.name.replace(/\.[^/.]+$/, "");
             return { ...obj, matched: true, favorited: false, playing: "" };
           });
 

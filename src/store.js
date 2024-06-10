@@ -15,6 +15,8 @@ const store = createStore({
 
       allButtonsRef: null,
       favoritedButtonsRef: null,
+
+      cachedAudioId: "" 
     }
   },
   mutations: {
@@ -80,9 +82,15 @@ const store = createStore({
     },
     setAllButtonsRef(state, ref) {
       state.allButtonsRef = ref;
-    }
+    },
+    saveFileToCache(state, fileId){
+      state.cachedAudio = fileId;
+    },
   },
   actions: {
+    cacheAudio(context, fileId){
+      context.commit('saveFileToCache', fileId);
+    },
     initiateButtons(context, array) {
       context.commit('setButtonListVars', array);
       context.commit('resetFilteredButtonList');

@@ -17,8 +17,8 @@
 
 <script>
 import Loader from '../loader/loader.vue';
-import { GetButton } from '../../services/button_services';
 import { getFile } from '../../services/axios';
+import { writeCacheFile, readCacheFile } from '@/services/cache_helper';
 
 /* eslint-disable */
 
@@ -80,32 +80,24 @@ export default {
             return cor;
         },
         playFile: async function () {
-            this.loadingAudio = true;
-
+            
             try {
-                const fileBlob = await getFile(this.button.id);
-                var base64 = await this.blobToBase64(fileBlob);
-
-                this.$store.dispatch("playAudio", { audio: `${base64}`, buttonInfos: { button: this.button, color: this.buttonColor } })
+                if (this.button.id == this.$store.state.cachedAudio){
+                    var file = await readCacheFile();
+                    this.$store.dispatch("playAudio", { audio: `data:audio/wav;base64,${file}`, buttonInfos: { button: this.button, color: this.buttonColor } })
+                } else {
+                    this.loadingAudio = true;
+                    const fileBlob = await getFile(this.button.id);
+                    var base64 = await this.blobToBase64(fileBlob);
+                    this.$store.dispatch("playAudio", { audio: `${base64}`, buttonInfos: { button: this.button, color: this.buttonColor } })
+                    this.$store.dispatch('cacheAudio', this.button.id);
+                    await writeCacheFile(base64);
+                }
             } catch (error) {
                 console.error('Error playing file:', error);
             } finally {
                 this.loadingAudio = false;
             }
-        },
-        playSound: function () {
-            this.loadingAudio = true;
-
-            GetButton.fetchButtonFile(this.button.id)
-                .then(response => {
-                    this.$store.dispatch("playAudio", { audio: `data:audio/x-wav;base64, ${response.data.file}`, buttonInfos: { button: this.button, color: this.buttonColor } })
-                })
-                .catch(err => {
-                    console.error("Error while loading file!", err);
-                })
-                .finally(_ => {
-                    this.loadingAudio = false;
-                })
         },
         onTouchStart(event) {
             this.held = false;
