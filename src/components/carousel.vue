@@ -30,6 +30,11 @@
             <div class="no-favorites-2">
               Clique no <span style="color: red; font-size: larger;">coração</span> ao lado do botão para favoritar!
             </div>
+            <br>
+            <br>
+            <div>
+              Clique e segure no botão para compartilhar externamente!
+            </div>
           </div>
         </div>
       </div>

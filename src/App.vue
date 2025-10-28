@@ -39,7 +39,7 @@ export default {
 
         const updatedList = response.map((obj) => {
             obj.name = obj.name.replace(/\.[^/.]+$/, "");
-            return { ...obj, matched: true, favorited: false, playing: "" };
+            return { ...obj, matched: true, favorited: false, playing: null };
           });
 
         this.$store.dispatch('initiateButtons', updatedList);

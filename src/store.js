@@ -2,7 +2,6 @@ import { createStore } from 'vuex'
 import { Favorites } from './PreferencesObject';
 
 /* eslint-disable */
-// comment
 const store = createStore({
   state() {
     return {
@@ -47,8 +46,9 @@ const store = createStore({
 
     setButtonClicked(state, buttonInfos) {
       if (state.audioConfig.buttonClicked) {
-        state.audioConfig.buttonClicked.playing = "";
+        state.audioConfig.buttonClicked.playing = null;
       }
+      
       state.audioConfig.buttonClicked = buttonInfos.button;
       state.audioConfig.buttonClicked.playing = buttonInfos.color;
     },
@@ -59,7 +59,7 @@ const store = createStore({
       state.audioConfig.audio.removeEventListener('ended', () => {});
 
       state.audioConfig.audio.addEventListener('ended', function () {
-        state.audioConfig.buttonClicked.playing = "";
+        state.audioConfig.buttonClicked.playing = null;
       });
 
       state.audioConfig.audio.play().catch(_ => _);

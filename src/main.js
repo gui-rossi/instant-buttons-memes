@@ -4,14 +4,16 @@ import App from './App.vue';
 
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import { faSearch, faTimes, faHeart as fasHeart } from '@fortawesome/free-solid-svg-icons';
+import { faSearch, faTimes, faHeart as fasHeart, faPauseCircle } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as farHeart } from '@fortawesome/free-regular-svg-icons';
+
 import store from './store';
 
 library.add(faSearch)
 library.add(faTimes)
 library.add(fasHeart)
 library.add(farHeart)
+library.add(faPauseCircle)
 
 createApp(App)
     .use(store)

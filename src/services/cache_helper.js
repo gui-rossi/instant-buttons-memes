@@ -1,16 +1,18 @@
 import { Filesystem, Directory } from '@capacitor/filesystem';
 
-const filePath = "BotoesMemes/CachedAudio.wav";
+const filePath = "CachedAudio.wav";
 
-export async function writeCacheFile(fileContent) {
+export async function writeCacheFile(fileContent, customPath = filePath) {
     try {
         const result = await Filesystem.writeFile({
-            path: filePath,
+            path: customPath,
             data: fileContent,
             directory: Directory.Cache,
             recursive: true
         });
+
         console.log('File written to cache:', result.uri);
+        return result.uri;
     } catch (err) {
         console.error('Error writing file to cache:', err);
     }
