@@ -24,6 +24,7 @@ export default {
     justify-content: center;
     align-items: center;
 
+    margin-top: 15px;
     padding-left: 8px;
     padding-right: 8px;
 

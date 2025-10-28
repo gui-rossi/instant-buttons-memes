@@ -24,17 +24,13 @@
           <Loader v-if="$store.state.buttonList.length == 0" class="loader-app" />
           <InstantButton v-for="instant in $store.state.favoritedButtonsList" :key="instant.id" :button="instant" />
           <div v-if="!$store.state.favoritedButtonsList.length" class="no-favorites">
-            <div>
-              Você ainda não tem nenhum meme favoritado.
-            </div>
+            <div>Você ainda não tem nenhum meme favoritado.</div>
             <div class="no-favorites-2">
-              Clique no <span style="color: red; font-size: larger;">coração</span> ao lado do botão para favoritar!
+              <div>• Aperte no <span style="color: red; font-size: large;">coração</span> ao lado do botão para favoritar!</div>
+              <div style="margin-top: 8px;">• Aperte e <span style="color: red; font-size: large;">segure</span> no botão para compartilhar externamente!</div>
+              <div style="margin-top: 8px;">• Quer ver seu meme aqui? Avalie o app com 5 estrelas e me conte qual!</div>
             </div>
-            <br>
-            <br>
-            <div>
-              Clique e segure no botão para compartilhar externamente!
-            </div>
+            <div style="color: #00ff00eb;">Aproveite! 😄</div>
           </div>
         </div>
       </div>
@@ -156,7 +152,7 @@ export default {
   display: flex;
   justify-content: space-evenly;
   margin-bottom: 10px;
-  margin-top: 40px;
+  margin-top: 55px;
 }
 
 .view-item {
@@ -218,5 +214,8 @@ export default {
 
 .no-favorites-2 {
   margin-top: 20px;
+  text-align: left;
+  margin-bottom: 20px;
+  font-size: 16px;
 }
 </style>
