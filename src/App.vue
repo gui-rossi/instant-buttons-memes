@@ -16,7 +16,7 @@ import AdSense from '../src/components/footer/adsense.vue';
 import Loader from '../src/components/loader/loader.vue';
 import { Favorites } from './PreferencesObject';
 import Carousel from './components/carousel.vue';
-import { listFiles } from './services/axios';
+import { listFiles } from './services/client';
 
 export default {
   name: 'App',

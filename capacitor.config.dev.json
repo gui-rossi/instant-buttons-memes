@@ -1,0 +1,9 @@
+{
+  "appId": "botoes.memes",
+  "appName": "Botões Memes",
+  "webDir": "dist",
+  "server": {
+    "url": "http://192.168.15.31:8080",
+    "cleartext": true
+  }
+}
