@@ -62,7 +62,7 @@ const store = createStore({
         state.audioConfig.buttonClicked.playing = null;
       });
 
-      state.audioConfig.audio.play().catch(_ => _);
+      state.audioConfig.audio.play().catch(err => console.error('Play blocked:', err.name, err.message));
     },
 
     setFavoritedList(state, favorites) {

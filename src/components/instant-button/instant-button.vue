@@ -18,7 +18,7 @@
 
 <script>
 import Loader from '../loader/loader.vue';
-import { getFile } from '../../services/axios';
+import { getFile } from '../../services/client';
 import { writeCacheFile, readCacheFile } from '@/services/cache_helper';
 import { Share } from '@capacitor/share';
 
