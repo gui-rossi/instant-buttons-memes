@@ -1,6 +1,6 @@
 import { createStore } from 'vuex'
 import { Favorites } from './PreferencesObject';
-import { AdMob } from '@capacitor-community/admob';
+import { AdMob, InterstitialAdPluginEvents } from '@capacitor-community/admob';
 
 /* eslint-disable */
 const store = createStore({
@@ -42,6 +42,11 @@ const store = createStore({
     },
     decrementInterstitialAdCounter(state) {
       state.nextInterstitialAd--;
+    },
+
+    pauseAudio(state){
+      state.audioConfig.audio.pause();
+      state.audioConfig.audio.dispatchEvent(new Event('ended'));
     },
 
     setButtonListVars(state, buttons) {
@@ -134,7 +139,8 @@ const store = createStore({
       context.commit('setAudio', audioAndButtonInfos.audio);
       context.commit('playAudio');
     },
-    async playInterstitialAd(context) {
+    async playInterstitialAd(context, audioAndButtonInfos) {
+      context.commit('pauseAudio');
       context.commit('resetInterstitialAdCounter');
 
       try{
@@ -143,6 +149,11 @@ const store = createStore({
           isTesting: process.env.VUE_APP_ADMOB_TESTING === 'true',
         });
         
+        var listener = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+          context.dispatch("playAudio", audioAndButtonInfos);
+          listener.remove();
+        });
+
         await AdMob.showInterstitial();
       } catch (error){
         console.log(error?.message)

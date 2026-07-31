@@ -1,7 +1,4 @@
 <template>
-  <div style="color: white;">
-    {{ this.$store.getters.nextInterstitialAd }}
-  </div>
   <Navbar />
   <div class="app">
     <Carousel />

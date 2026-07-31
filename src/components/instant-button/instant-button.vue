@@ -8,7 +8,7 @@
         <Loader v-if="this.loadingAudio" style="margin-top: 10px;" />
         <div class="instant-button-name">{{ button.name }}</div>
         
-        <font-awesome-icon v-if="button.playing != null" @click="pauseAudio" :icon="['fas', 'pause-circle']" class="upper-right-icon pause-icon" />
+        <font-awesome-icon v-if="button.playing != null" @click="pauseAudio" :icon="['fas', 'stop-circle']" class="upper-right-icon pause-icon" />
         <div v-else>
             <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']" class="upper-right-icon favorite-icon-regular" />
             <font-awesome-icon v-else @click="addOrRemoveFavorite" :icon="['fas', 'heart']" class="upper-right-icon favorite-icon-solid" />
@@ -86,7 +86,7 @@ export default {
                 var file = await this.getFile();
                 
                 if (this.$store.getters.nextInterstitialAd <= 0){
-                    this.$store.dispatch("playInterstitialAd");
+                    this.$store.dispatch("playInterstitialAd", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } });
                 } else{
                     this.$store.dispatch("playAudio", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } });
                     this.$store.commit("decrementInterstitialAdCounter");
