@@ -1,5 +1,6 @@
 import { createStore } from 'vuex'
 import { Favorites } from './PreferencesObject';
+import { AdMob } from '@capacitor-community/admob';
 
 /* eslint-disable */
 const store = createStore({
@@ -15,10 +16,34 @@ const store = createStore({
       allButtonsRef: null,
       favoritedButtonsRef: null,
 
-      cachedAudioId: "" 
+      cachedAudioId: "",
+
+      nextInterstitialAd: Math.floor(Math.random() * (12 - 9 + 1)) + 9, // Random int between 5 and 8
     }
   },
+  getters: {
+    buttonList: (state) => state.buttonList,
+    filteredButtonList: (state) => state.filteredButtonList,
+    audioConfig: (state) => state.audioConfig,
+    favoritedButtonsList: (state) => state.favoritedButtonsList,
+    isMobile: (state) => state.isMobile,
+    allButtonsRef: (state) => state.allButtonsRef,
+    favoritedButtonsRef: (state) => state.favoritedButtonsRef,
+    cachedAudioId: (state) => state.cachedAudioId,
+    nextInterstitialAd: (state) => state.nextInterstitialAd,
+    isAudioPlaying: (state) => {
+      return state.audioConfig.buttonClicked !== null && state.audioConfig.buttonClicked.playing !== null;
+    },
+    activeClickedButton: (state) => state.audioConfig.buttonClicked
+  },
   mutations: {
+    resetInterstitialAdCounter(state) {
+      state.nextInterstitialAd = Math.floor(Math.random() * (28 - 22 + 1)) + 22 // Random int between 22 and 28
+    },
+    decrementInterstitialAdCounter(state) {
+      state.nextInterstitialAd--;
+    },
+
     setButtonListVars(state, buttons) {
       state.buttonList = [...buttons];
       state.filteredButtonList = [...buttons];
@@ -108,6 +133,20 @@ const store = createStore({
       context.commit('setButtonClicked', audioAndButtonInfos.buttonInfos);
       context.commit('setAudio', audioAndButtonInfos.audio);
       context.commit('playAudio');
+    },
+    async playInterstitialAd(context) {
+      context.commit('resetInterstitialAdCounter');
+
+      try{
+        await AdMob.prepareInterstitial({
+          adId: process.env.VUE_APP_ADMOB_INTERSTITIAL_ID,
+          isTesting: process.env.VUE_APP_ADMOB_TESTING === 'true',
+        });
+        
+        await AdMob.showInterstitial();
+      } catch (error){
+        console.log(error?.message)
+      }
     }
   }
 })

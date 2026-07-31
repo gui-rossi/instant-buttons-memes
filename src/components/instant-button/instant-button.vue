@@ -85,12 +85,17 @@ export default {
             try {
                 var file = await this.getFile();
                 
-                this.$store.dispatch("playAudio", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } })
-                
-                if (this.button.id != this.$store.state.cachedAudio)
-                {
-                    this.$store.dispatch('cacheAudio', this.button.id);
-                    await writeCacheFile(file);
+                if (this.$store.getters.nextInterstitialAd <= 0){
+                    this.$store.dispatch("playInterstitialAd");
+                } else{
+                    this.$store.dispatch("playAudio", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } });
+                    this.$store.commit("decrementInterstitialAdCounter");
+
+                    if (this.button.id != this.$store.state.cachedAudio)
+                    {
+                        this.$store.dispatch('cacheAudio', this.button.id);
+                        await writeCacheFile(file);
+                    }
                 }
             } catch (error) {
                 console.error('Error playing file:', error);
@@ -132,9 +137,9 @@ export default {
                 const uri = await writeCacheFile(file, "SharedAudio.wav");
 
                 await Share.share({
-                    title: "Baixa o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
-                    text: "Baixa o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
-                    dialogTitle: "Baixa o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
+                    title: "Baixe o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
+                    text: "Baixe o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
+                    dialogTitle: "Baixe o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
                     url: uri
                 });
             }, 1000);
