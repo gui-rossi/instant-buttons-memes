@@ -8,7 +8,7 @@
         <Loader v-if="this.loadingAudio" style="margin-top: 10px;" />
         <div class="instant-button-name">{{ button.name }}</div>
         
-        <font-awesome-icon v-if="button.playing != null" @click="pauseAudio" :icon="['fas', 'stop-circle']" class="upper-right-icon pause-icon" />
+        <font-awesome-icon v-if="button.playing != null" @click="pauseAudio" :icon="['fas', 'pause-circle']" class="upper-right-icon pause-icon" />
         <div v-else>
             <font-awesome-icon v-if="!this.verifyIfFavorite" @click="addOrRemoveFavorite" :icon="['far', 'heart']" class="upper-right-icon favorite-icon-regular" />
             <font-awesome-icon v-else @click="addOrRemoveFavorite" :icon="['fas', 'heart']" class="upper-right-icon favorite-icon-solid" />
@@ -132,6 +132,12 @@ export default {
                 bottom: boundigBoxes.bottom,
             };
 
+            this.touchMoved = false;
+            this.touchStartCoords = {
+                x: event.touches[0].clientX,
+                y: event.touches[0].clientY,
+            };
+
             this.holdTimer = setTimeout(async () => {
                 const file = await this.getFile();
                 const uri = await writeCacheFile(file, "SharedAudio.wav");
@@ -160,8 +166,20 @@ export default {
 
             event.stopPropagation();
         },
-        onTouchMove() {
+        onTouchMove(event) {
             clearTimeout(this.holdTimer);
+
+            const currentX = event.touches[0].clientX;
+            const currentY = event.touches[0].clientY;
+
+            const deltaX = Math.abs(currentX - this.touchStartCoords.x);
+            const deltaY = Math.abs(currentY - this.touchStartCoords.y);
+
+            const MOVEMENT_THRESHOLD = 10; // pixels — tune to taste
+
+            if (deltaX > MOVEMENT_THRESHOLD || deltaY > MOVEMENT_THRESHOLD) {
+                this.touchMoved = true;
+            }
         },
         addOrRemoveFavorite: function () {
             var favorites = this.$store.state.favoritedButtonsList;
