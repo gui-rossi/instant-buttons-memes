@@ -85,6 +85,9 @@ export default {
             try {
                 var file = await this.getFile();
                 
+                if (this.$store.getters.playingAd)
+                    return;
+
                 if (this.$store.getters.nextInterstitialAd <= 0){
                     this.$store.dispatch("playInterstitialAd", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } });
                 } else{

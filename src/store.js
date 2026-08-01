@@ -19,6 +19,7 @@ const store = createStore({
       cachedAudioId: "",
 
       nextInterstitialAd: Math.floor(Math.random() * (12 - 9 + 1)) + 9, // Random int between 5 and 8
+      playingAd: false,
     }
   },
   getters: {
@@ -34,7 +35,8 @@ const store = createStore({
     isAudioPlaying: (state) => {
       return state.audioConfig.buttonClicked !== null && state.audioConfig.buttonClicked.playing !== null;
     },
-    activeClickedButton: (state) => state.audioConfig.buttonClicked
+    activeClickedButton: (state) => state.audioConfig.buttonClicked,
+    playingAd: (state) => state.playingAd,
   },
   mutations: {
     resetInterstitialAdCounter(state) {
@@ -42,6 +44,9 @@ const store = createStore({
     },
     decrementInterstitialAdCounter(state) {
       state.nextInterstitialAd--;
+    },
+    setPlayingAd(state, isPlaying) {
+      state.playingAd = isPlaying;
     },
 
     pauseAudio(state){
@@ -140,23 +145,40 @@ const store = createStore({
       context.commit('playAudio');
     },
     async playInterstitialAd(context, audioAndButtonInfos) {
-      context.commit('pauseAudio');
+      context.commit('setPlayingAd', true);
       context.commit('resetInterstitialAdCounter');
 
       try{
+        var failedToLoadEvent = await AdMob.addListener(InterstitialAdPluginEvents.FailedToLoad, () => {
+          context.commit('setPlayingAd', false);
+          failedToLoadEvent.remove();
+        });
+
+        var failedToShowEvent = await AdMob.addListener(InterstitialAdPluginEvents.FailedToShow, () => {
+          context.commit('setPlayingAd', false);
+          failedToShowEvent.remove();
+        });
+
+        var dismissedEvent = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
+          context.commit('setPlayingAd', false);
+          context.dispatch("playAudio", audioAndButtonInfos);
+          dismissedEvent.remove();
+        });
+
+        var loadedEvent = await AdMob.addListener(InterstitialAdPluginEvents.Showed, () => {
+          context.commit('pauseAudio');
+          loadedEvent.remove();
+        });
+        
         await AdMob.prepareInterstitial({
           adId: process.env.VUE_APP_ADMOB_INTERSTITIAL_ID,
           isTesting: process.env.VUE_APP_ADMOB_TESTING === 'true',
         });
         
-        var listener = await AdMob.addListener(InterstitialAdPluginEvents.Dismissed, () => {
-          context.dispatch("playAudio", audioAndButtonInfos);
-          listener.remove();
-        });
-
         await AdMob.showInterstitial();
       } catch (error){
-        console.log(error?.message)
+        console.log(error?.message);
+        context.commit('setPlayingAd', false);
       }
     }
   }
