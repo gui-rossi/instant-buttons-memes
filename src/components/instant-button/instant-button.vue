@@ -85,12 +85,20 @@ export default {
             try {
                 var file = await this.getFile();
                 
-                this.$store.dispatch("playAudio", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } })
-                
-                if (this.button.id != this.$store.state.cachedAudio)
-                {
-                    this.$store.dispatch('cacheAudio', this.button.id);
-                    await writeCacheFile(file);
+                if (this.$store.getters.playingAd)
+                    return;
+
+                if (this.$store.getters.nextInterstitialAd <= 0){
+                    this.$store.dispatch("playInterstitialAd", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } });
+                } else{
+                    this.$store.dispatch("playAudio", { audio: file, buttonInfos: { button: this.button, color: this.buttonColor } });
+                    this.$store.commit("decrementInterstitialAdCounter");
+
+                    if (this.button.id != this.$store.state.cachedAudio)
+                    {
+                        this.$store.dispatch('cacheAudio', this.button.id);
+                        await writeCacheFile(file);
+                    }
                 }
             } catch (error) {
                 console.error('Error playing file:', error);
@@ -127,14 +135,20 @@ export default {
                 bottom: boundigBoxes.bottom,
             };
 
+            this.touchMoved = false;
+            this.touchStartCoords = {
+                x: event.touches[0].clientX,
+                y: event.touches[0].clientY,
+            };
+
             this.holdTimer = setTimeout(async () => {
                 const file = await this.getFile();
                 const uri = await writeCacheFile(file, "SharedAudio.wav");
 
                 await Share.share({
-                    title: "Baixa o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
-                    text: "Baixa o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
-                    dialogTitle: "Baixa o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
+                    title: "Baixe o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
+                    text: "Baixe o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
+                    dialogTitle: "Baixe o aplicativo para ouvir mais memes! https://play.google.com/store/apps/details?id=botoes.memes",
                     url: uri
                 });
             }, 1000);
@@ -155,8 +169,20 @@ export default {
 
             event.stopPropagation();
         },
-        onTouchMove() {
+        onTouchMove(event) {
             clearTimeout(this.holdTimer);
+
+            const currentX = event.touches[0].clientX;
+            const currentY = event.touches[0].clientY;
+
+            const deltaX = Math.abs(currentX - this.touchStartCoords.x);
+            const deltaY = Math.abs(currentY - this.touchStartCoords.y);
+
+            const MOVEMENT_THRESHOLD = 10; // pixels — tune to taste
+
+            if (deltaX > MOVEMENT_THRESHOLD || deltaY > MOVEMENT_THRESHOLD) {
+                this.touchMoved = true;
+            }
         },
         addOrRemoveFavorite: function () {
             var favorites = this.$store.state.favoritedButtonsList;

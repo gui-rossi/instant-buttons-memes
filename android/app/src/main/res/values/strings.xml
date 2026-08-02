@@ -4,4 +4,5 @@
     <string name="title_activity_main">Botões Memes</string>
     <string name="package_name">botoes.memes</string>
     <string name="custom_url_scheme">botoes.memes</string>
+    <string name="admob_app_id">ca-app-pub-7566330501183670~6789046840</string>
 </resources>

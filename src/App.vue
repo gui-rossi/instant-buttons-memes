@@ -3,7 +3,6 @@
   <div class="app">
     <Carousel />
   </div>
-  <!-- <AdSense /> -->
 </template>
 
 <script>
@@ -12,27 +11,47 @@ import './fonts/fonts.css';
 
 import InstantButton from '../src/components/instant-button/instant-button.vue';
 import Navbar from '../src/components/navbar/navbar.vue';
-import AdSense from '../src/components/footer/adsense.vue';
 import Loader from '../src/components/loader/loader.vue';
 import { Favorites } from './PreferencesObject';
 import Carousel from './components/carousel.vue';
 import { listFiles } from './services/client';
+import { AdMob, BannerAdSize, BannerAdPosition } from '@capacitor-community/admob';
 
 export default {
   name: 'App',
   components: {
     InstantButton,
     Navbar,
-    AdSense,
     Loader,
     Carousel,
   },
   mounted: function () {
+    this.loadAds();
+
     this.fetchFiles();
 
     this.loadFavorited();
   },
   methods: {
+    loadAds: async function () {
+      try {
+        await AdMob.initialize({
+          requestTrackingAuthorization: true,
+          testingDevices: [], // add your device ID here while testing, keeps you from serving real ads to yourself
+          initializeForTesting: true, // set to false when going live
+        });
+
+        await AdMob.showBanner({
+          adId: process.env.VUE_APP_ADMOB_BANNER_ID,
+          adSize: BannerAdSize.BANNER,
+          position: BannerAdPosition.BOTTOM_CENTER,
+          margin: 0,
+          isTesting: process.env.VUE_APP_ADMOB_TESTING === 'true',
+        });
+      } catch(error){
+        console.error('Error initiating ads:', error.message);
+      }
+    },
     fetchFiles: async function () {
       try {
         var response = await listFiles();
